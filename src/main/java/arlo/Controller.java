@@ -51,21 +51,20 @@ public class Controller {
 
     /* Getting the metadata list and checking if it's empty */
     @RequestMapping(value = "/files", method = RequestMethod.GET)
-    public ListMetadata pullMetadata()
+    public HashMap<String,Metadata> getMetadata()
     {
-        //mapperMetadata.put("f1.txt",new Metadata("f1.txt","172.20.10.7:8080"));
         if (mapperMetadata.isEmpty())
         {
-            return new ListMetadata(null,"WARNING : the list of metadata is empty");
+            return null;
         }
 
-        return new ListMetadata(mapperMetadata,"SUCCESS : The list isn't empty and contain the following metadata");
+        return mapperMetadata;
     }
 
-
-    /* Deleting a specific peer from the list of available peer for a specific file
+    /*
+    //Deleting a specific peer from the list of available peer for a specific file
       *
-       * In other words, a specific peer won't share a specific file anymore */
+       * In other words, a specific peer won't share a specific file anymore
     @RequestMapping(value = "/files", method = RequestMethod.DELETE)
     public Message messageDeleteMetadata(@RequestBody FileMetadata file) {
         if(mapperMetadata.containsKey(file.getFileId()) && mapperMetadata.get(file.getFileId()).getListPeers().remove(file.getPeerId()))
@@ -75,36 +74,21 @@ public class Controller {
 
         return new Message("FAIL : No file or peer corresponding in the metadata list");
     }
+    */
 
     /* Adding a new peer and file to the metadata list
      * If the file already exists in the metadata list, we only add the peer to the list of available peer for this list
       * returns an error if the peer already share the file*/
     @RequestMapping(value = "/files", method = RequestMethod.POST)
-    public Message messageUploadMetada (@RequestBody FileMetadata file) {
-        if(!mapperMetadata.containsKey(file.getFileId()))
-        {
-            ArrayList<String> list = new ArrayList<String>();
-            list.add(file.getPeerId());
-
-            mapperMetadata.put(file.getFileId(), new Metadata(file.getFileId(), list));
-
-            return new Message("SUCCESS : FileMetadata and peer added to the metadata list");
-
-        }
-        else if(!mapperMetadata.get(file.getFileId()).getListPeers().contains(file.getPeerId()))
-        {
-            mapperMetadata.get(file.getFileId()).getListPeers().add(file.getPeerId());
-
-            return new Message("SUCCESS : Peer linked to this file in the metadata list");
-        }
-
-        return new Message("FAIL : Peer already share this file");
+    public void uploadMetadata (@RequestBody Metadata fileMeta) {
+        if(!mapperMetadata.containsKey(fileMeta.getFileId()))
+            mapperMetadata.put(fileMeta.getFileId(), fileMeta);
     }
 
-
-    /* Dynamic server URL depending on which file we want to ask to a specific peer
+    /*
+    //Dynamic server URL depending on which file we want to ask to a specific peer
      * If this the server of this peer contains this file, he will be able to send it
-       * if this peer is not in the list of the available peers for the file we ask, he wont be able to send it*/
+       * if this peer is not in the list of the available peers for the file we ask, he wont be able to send it
     @RequestMapping(value = "/files/{fileId}", method = RequestMethod.GET)
     public FileData messageGetFile(@PathVariable String fileId) {
         if(!mapperMetadata.containsKey(fileId))
@@ -118,5 +102,7 @@ public class Controller {
 
         return new FileData("SUCCESS : FileMetadata sent", fileData.getData());
     }
+
+    */
 
 }

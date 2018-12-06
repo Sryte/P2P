@@ -8,28 +8,33 @@ import java.util.ArrayList;
 public class Metadata {
 
     private String fileId;
-    private ArrayList<String> listPeers = new ArrayList<String>();
+    private long size;
+    private String name;
 
-    public Metadata(String fileId, ArrayList<String> listPeers) {
-        this.fileId = fileId;
-        this.listPeers = listPeers;
-    }
-
-
-    public ArrayList<String> getListPeers() {
-        return listPeers;
-    }
-
-    public void setListPeers(ArrayList<String> listPeers) {
-        this.listPeers = listPeers;
-    }
-
-    public String getFileid() {
+    public String getFileId() {
         return fileId;
     }
 
-    public void setFileid(String fileid) {
-        this.fileId = fileid;
+    public void setFileId(String fileId) {
+        this.fileId = fileId;
     }
+
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
 
 }

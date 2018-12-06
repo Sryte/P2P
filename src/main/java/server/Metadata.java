@@ -1,6 +1,4 @@
-package arlo;
-
-import java.util.ArrayList;
+package server;
 
 /* A fileID that designate a specific file is available in 0 to n peers
  * that's why we use a list of peers for a specific file id */

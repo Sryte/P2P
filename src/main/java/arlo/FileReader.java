@@ -31,7 +31,7 @@ public class FileReader {
     }
 
     public FileReader(String file) {
-        String path = "C:\\Users\\Ludovic Javet\\Desktop\\share\\" + file; // a modifier
+        String path = "C:\\Users\\laure\\Desktop\\P2P\\" + file; // a modifier
         this.data = readAllBytesJava7(path);
     }
 

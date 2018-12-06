@@ -1,4 +1,4 @@
-package arlo;
+package server;
 
 /* A peer is identified by his URL
  * the URL is compsoed by IP:port */

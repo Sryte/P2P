@@ -3,6 +3,7 @@ package arlo;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Base64;
 
 public class FileReader {
 
@@ -21,7 +22,7 @@ public class FileReader {
         String content = "";
         try
         {
-            content = new String ( Files.readAllBytes( Paths.get(filePath) ) );
+            content = new String (Base64.getEncoder().encode(Files.readAllBytes(Paths.get(filePath))));
         }
         catch (IOException e)
         {

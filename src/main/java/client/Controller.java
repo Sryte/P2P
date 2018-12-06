@@ -10,25 +10,9 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.FileReader;
-import java.io.IOException;
+import java.util.Base64;
 
 public class Controller {
-
-    public void uploadFilesMetadata(String url, String fileId, long size, String name) throws Exception {
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-
-        url = "http://"+url+"/files";
-        HttpPost postFileMetadata = new HttpPost(url);
-
-        String payload = "{\"fileId\":\""+fileId+"\",\"size\":\""+size+"\",\"name\":\""+name+"\"}";
-        StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
-
-        postFileMetadata.setEntity(entity);
-
-        HttpResponse response = httpClient.execute(postFileMetadata);
-
-        System.out.println(response.getStatusLine().getStatusCode());
-    }
 
     public void uploadFilesData(String url, String name, String fileId) throws Exception {
         DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -57,27 +41,22 @@ public class Controller {
 
         br.close();
         fr.close();
-    }
+    } // server function missing
 
-    public void getFilesData(String url, String fileId) throws Exception { //Is OK
+    public void uploadFilesMetadata(String url, String fileId, long size, String name) throws Exception {
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
-        url = "http://"+url+"/files/"+fileId;
-        HttpGet getFile = new HttpGet(url);
+        url = "http://"+url+"/files";
+        HttpPost postFileMetadata = new HttpPost(url);
 
-        HttpResponse response = httpClient.execute(getFile);
+        String payload = "{\"fileId\":\""+fileId+"\",\"size\":\""+size+"\",\"name\":\""+name+"\"}";
+        StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
 
-        BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
+        postFileMetadata.setEntity(entity);
 
-        String output;
-        System.out.println("Output from Server .... \n");
-        while ((output = br.readLine()) != null) {
-            System.out.println(output);
-        }
+        HttpResponse response = httpClient.execute(postFileMetadata);
 
         System.out.println(response.getStatusLine().getStatusCode());
-
-        br.close();
     }
 
     public void registerPeers(String url, String myURL) throws Exception {
@@ -94,6 +73,31 @@ public class Controller {
         HttpResponse response = httpClient.execute(postPeer);
 
         System.out.println(response.getStatusLine().getStatusCode());
+    }
+
+    public void getFilesData(String url, String fileId) throws Exception { //Is OK
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+
+        url = "http://"+url+"/files/"+fileId;
+        HttpGet getFile = new HttpGet(url);
+
+        HttpResponse response = httpClient.execute(getFile);
+
+        BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
+
+        String reader;
+        String content="";
+        while ((reader = br.readLine()) != null) {
+            content+= reader;
+        }
+
+        String fileContent;
+        fileContent = new String (Base64.getDecoder().decode(content));
+
+        System.out.println(fileContent);
+        System.out.println(response.getStatusLine().getStatusCode());
+
+        br.close();
     }
 
     public void getMetadata(String url) throws Exception {
@@ -149,7 +153,7 @@ public class Controller {
         System.out.println(response.getStatusLine().getStatusCode());
     }
 
-    public void deleteFileData(String url, String fileId) throws Exception {
+    public void deleteFilesData(String url, String fileId) throws Exception {
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
         url = "http://"+url+"/files/"+fileId;
@@ -158,5 +162,6 @@ public class Controller {
         HttpResponse response = httpClient.execute(deleteFile);
 
         System.out.println(response.getStatusLine().getStatusCode());
-    }
+    } // server function missing
+
 }

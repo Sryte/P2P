@@ -17,12 +17,12 @@ public class FileReader {
         this.data = data;
     }
 
-    public static String readAllBytesJava7(String filePath)
+    public static String encodeBase64(String filePath)
     {
         String content = "";
         try
         {
-            content = new String (Base64.getEncoder().encode(Files.readAllBytes(Paths.get(filePath))));
+            content = Base64.getEncoder().encodeToString(Files.readAllBytes(Paths.get(filePath)));
         }
         catch (IOException e)
         {
@@ -33,7 +33,7 @@ public class FileReader {
 
     public FileReader(String file) {
         String path = "C:\\Users\\laure\\Desktop\\P2P\\" + file; // a modifier
-        this.data = readAllBytesJava7(path);
+        this.data = encodeBase64(path);
     }
 
 }

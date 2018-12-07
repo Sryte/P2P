@@ -12,7 +12,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.FileReader;
 import java.util.Base64;
 
-public class Controller {
+public class ControllerClient {
 
     public void uploadFilesData(String url, String name, String fileId) throws Exception {
         DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -91,8 +91,9 @@ public class Controller {
             content+= reader;
         }
 
-        String fileContent;
-        fileContent = new String (Base64.getDecoder().decode(content));
+        byte[] decodedBytes = Base64.getDecoder().decode(content);
+
+        String fileContent = new String(decodedBytes);
 
         System.out.println(fileContent);
         System.out.println(response.getStatusLine().getStatusCode());
@@ -162,6 +163,6 @@ public class Controller {
         HttpResponse response = httpClient.execute(deleteFile);
 
         System.out.println(response.getStatusLine().getStatusCode());
-    } // server function missing
+    } // server function incomplete
 
 }

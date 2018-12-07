@@ -10,7 +10,7 @@ import tools.FileReader;
 
 
 @RestController
-public class Controller {
+public class ControllerServer {
 
     private final List<String> listPeers = new ArrayList<>();
 

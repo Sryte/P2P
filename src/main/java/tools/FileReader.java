@@ -32,7 +32,8 @@ public class FileReader {
     }
 
     public FileReader(String file) {
-        String path = "C:\\Users\\laure\\Desktop\\P2P\\" + file; // a modifier
+        String path = System.getProperty("user.dir")+"\\share\\" + file;
+        System.out.println(path);
         this.data = encodeBase64(path);
     }
 

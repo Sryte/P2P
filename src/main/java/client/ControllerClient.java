@@ -12,21 +12,25 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.InputStreamReader;
+import java.util.Base64;
 
 public class ControllerClient {
 
     public void uploadFilesData(String url, String name, String fileId) throws Exception {
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
-        FileReader fr = new FileReader(System.getProperty("user.dir")+"\\share\\" + name); //change to relative path
+        FileReader fr = new FileReader(System.getProperty("user.dir")+"\\share\\" + name);
         BufferedReader br = new BufferedReader(fr);
 
         String reader;
-        String fileContent = null;
+        String fileContent = "";
 
         while ((reader = br.readLine()) != null) {
             fileContent+=reader;
         }
+        //System.out.println(fileContent);
+        fileContent = Base64.getEncoder().encodeToString(fileContent.getBytes());
+        System.out.println(fileContent);
 
         url = "http://"+url+"/files/"+fileId;
         HttpPost postFileData = new HttpPost(url);

@@ -2,7 +2,7 @@ package server;
 
 import org.springframework.web.bind.annotation.*;
 import tools.FileDelete;
-import tools.FileReader;
+import tools.FileReading;
 import tools.StringWriter;
 
 import java.io.IOException;
@@ -88,7 +88,7 @@ public class ControllerServer {
         if(!mapperMetadata.containsKey(fileId))
             return null;
 
-        FileReader fileData = new FileReader(fileId);
+        FileReading fileData = new FileReading(fileId);
 
         return fileData.getData();
     }

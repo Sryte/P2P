@@ -3,14 +3,29 @@ package tools;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Base64;
 
 public class StringWriter {
 
-    public void writeFile(String content, String filePath) throws IOException {
+    private String data;
+    private String fileName;
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
-        writer.write(content);
+    public void writeFile() throws IOException {
+        String path = System.getProperty("user.dir")+"\\share\\" + fileName;
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+
+        byte[] decodedBytes = Base64.getDecoder().decode(data);
+
+        String fileContent = new String(decodedBytes);
+        writer.write(fileContent);
 
         writer.close();
     }
+
+    public StringWriter(String data, String fileName) {
+        this.data = data;
+        this.fileName = fileName;
+    }
+
 }

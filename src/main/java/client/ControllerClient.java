@@ -41,7 +41,7 @@ public class ControllerClient {
 
         br.close();
         fr.close();
-    } // server function missing
+    }
 
     public void uploadFilesMetadata(String url, String fileId, long size, String name) throws Exception {
         DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -91,11 +91,7 @@ public class ControllerClient {
             content+= reader;
         }
 
-        byte[] decodedBytes = Base64.getDecoder().decode(content);
-
-        String fileContent = new String(decodedBytes);
-
-        System.out.println(fileContent);
+        //System.out.println(fileContent);
         System.out.println(response.getStatusLine().getStatusCode());
 
         br.close();
@@ -163,6 +159,6 @@ public class ControllerClient {
         HttpResponse response = httpClient.execute(deleteFile);
 
         System.out.println(response.getStatusLine().getStatusCode());
-    } // server function incomplete
+    }
 
 }

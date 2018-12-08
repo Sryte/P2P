@@ -1,23 +1,24 @@
 package client;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
-import java.util.Base64;
+import java.io.InputStreamReader;
 
 public class ControllerClient {
 
     public void uploadFilesData(String url, String name, String fileId) throws Exception {
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
-        FileReader fr = new FileReader("C:\\Users\\laure\\Desktop\\P2P\\" + name); //change to relative path
+        FileReader fr = new FileReader(System.getProperty("user.dir")+"\\share\\" + name); //change to relative path
         BufferedReader br = new BufferedReader(fr);
 
         String reader;
@@ -30,7 +31,7 @@ public class ControllerClient {
         url = "http://"+url+"/files/"+fileId;
         HttpPost postFileData = new HttpPost(url);
 
-        String payload = "{\"fileContent\":\""+fileContent+"\"}";
+        String payload = "{\"content\":\""+fileContent+"\"}";
         StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
 
         postFileData.setEntity(entity);
@@ -43,11 +44,18 @@ public class ControllerClient {
         fr.close();
     }
 
-    public void uploadFilesMetadata(String url, String fileId, long size, String name) throws Exception {
+    public void uploadFilesMetadata(String url, String name) throws Exception {
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
         url = "http://"+url+"/files";
         HttpPost postFileMetadata = new HttpPost(url);
+
+        String path = System.getProperty("user.dir")+"\\share\\" + name;
+        File file = new File(path);
+        long size = file.length();
+        String size2 = new String(String.valueOf(size));
+
+        long fileId = name.hashCode() * size2.hashCode();
 
         String payload = "{\"fileId\":\""+fileId+"\",\"size\":\""+size+"\",\"name\":\""+name+"\"}";
         StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);

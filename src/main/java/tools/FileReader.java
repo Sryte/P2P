@@ -23,6 +23,7 @@ public class FileReader {
         try
         {
             content = Base64.getEncoder().encodeToString(Files.readAllBytes(Paths.get(filePath)));
+            //System.out.println(content);
         }
         catch (IOException e)
         {

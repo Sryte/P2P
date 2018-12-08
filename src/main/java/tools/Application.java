@@ -1,4 +1,4 @@
-package client;
+package tools;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Application {
 
     public static void main(String[] args) throws Exception{
-        ControllerClient ctrl = new ControllerClient();
+        RequestsClient ctrl = new RequestsClient();
         ctrl.getFilesData("192.168.43.252:8080","f1.txt");
         ctrl.uploadFilesMetadata("192.168.43.252:8080","f1.txt",64,"f1.txt");
         ctrl.getMetadata("192.168.43.252:8080");

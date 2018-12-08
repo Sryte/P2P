@@ -1,4 +1,4 @@
-package client;
+package tools;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -14,7 +14,7 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.Base64;
 
-public class ControllerClient {
+public class RequestsClient {
 
     public void uploadFilesData(String url, String name, String fileId) throws Exception {
         DefaultHttpClient httpClient = new DefaultHttpClient();

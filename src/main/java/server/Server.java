@@ -11,20 +11,16 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-public class ControllerServer {
-
-    private final List<String> listPeers = new ArrayList<>();
-
-    /* The metadata list is a hashmap to be able to attribute keys to files and peers */
-    private final HashMap<String,Metadata> mapperMetadata = new HashMap<>();
-
-    // public final MyURL myURL = new MyURL();
+public class Server extends AbstractServer{
 
     /* adding a specific peer to the list of peers of the network */
     @RequestMapping(value = "/peers", method = RequestMethod.POST)
     public void register(@RequestBody Peer peer) {
         if(!listPeers.contains(peer.getURL()))
+        {
             listPeers.add(peer.getURL());
+            notifyObserverListPeers(this.listPeers);
+        }
     }
 
     /* Obtain the list of available peers in the network and checking if the list is empty*/
@@ -51,10 +47,8 @@ public class ControllerServer {
         {
             return null;
         }
-
         return mapperMetadata;
     }
-
 
     /* Deleting a specific peer from the list of available peer for a specific file
      *
@@ -77,7 +71,11 @@ public class ControllerServer {
     @RequestMapping(value = "/files", method = RequestMethod.POST)
     public void uploadMetadata (@RequestBody Metadata fileMeta) {
         if(!mapperMetadata.containsKey(fileMeta.getFileId()))
+        {
             mapperMetadata.put(fileMeta.getFileId(), fileMeta);
+            notifyObserverMapperMetadata(mapperMetadata);
+        }
+
     }
 
     /* Dynamic server URL depending on which file we want to ask to a specific peer
@@ -105,5 +103,4 @@ public class ControllerServer {
             return ; // code d'erreur
         }
     }
-
 }

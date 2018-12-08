@@ -1,23 +1,29 @@
 package gui;
 
 
+import controller.AbstractController;
+import observer.Observer;
+import server.Metadata;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.List;
 
 
-public class Fenetre extends JFrame{
+public class Client extends JFrame implements Observer{
 
-    private JPanel center_container = new JPanel();
-    private PanelPeers panel_peers = new PanelPeers();
-    private PanelFiles panel_files = new PanelFiles();
-    private JPanel panel_result = new PanelResult();
-    private JPanel panel_log = new PanelLog();
-    private JPanel global_container = new JPanel();
+    protected JPanel center_container = new JPanel();
+    protected PanelPeers panel_peers;
+    protected PanelFiles panel_files = new PanelFiles();
+    protected JPanel panel_result = new PanelResult();
+    protected JPanel panel_log = new PanelLog();
+    protected JPanel global_container = new JPanel();
 
     private final static int width = 900;
     private final static int height = 500;
 
-    public Fenetre(){
+    public Client(AbstractController controller){
 
         // Configurations générales de la fenêtre
         // -----------------------------------
@@ -26,6 +32,11 @@ public class Fenetre extends JFrame{
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
+        // -----------------------------------
+
+        // Creation des panels
+        // -----------------------------------
+        panel_peers = new PanelPeers(controller);
         // -----------------------------------
 
         initComposant();
@@ -69,6 +80,13 @@ public class Fenetre extends JFrame{
 
         // Ajout du conteneur global à la fenêtre
         this.setContentPane(global_container);
+    }
+
+    public void updateListPeers(List<String> list) {
+        panel_peers.setlistPeers(list);
+    }
+    public void updateMapperMetadata(HashMap<String, Metadata> mapper) {
+
     }
 
 

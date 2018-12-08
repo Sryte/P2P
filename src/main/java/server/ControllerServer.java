@@ -1,16 +1,17 @@
 package server;
 
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 
 import org.springframework.web.bind.annotation.*;
+import tools.FileDelete;
 import tools.FileReader;
-
+import tools.StringWriter;
 
 @RestController
-public class Controller {
+public class ControllerServer {
 
     private final List<String> listPeers = new ArrayList<>();
 
@@ -21,14 +22,14 @@ public class Controller {
 
     /* adding a specific peer to the list of peers of the network */
     @RequestMapping(value = "/peers", method = RequestMethod.POST)
-    public void messageRegister(@RequestBody Peer peer) {
+    public void register(@RequestBody Peer peer) {
         if(!listPeers.contains(peer.getURL()))
             listPeers.add(peer.getURL());
     }
 
     /* Obtain the list of available peers in the network and checking if the list is empty*/
     @RequestMapping(value = "/peers", method = RequestMethod.GET)
-    public List<String> pullList()
+    public List<String> getListPeers()
     {
         if (listPeers.isEmpty())
             return null;
@@ -38,7 +39,7 @@ public class Controller {
 
     /* Delete a specific peer in the list of the available peers */
     @RequestMapping(value = "/peers/{peerId}", method = RequestMethod.DELETE)
-    public void messageUnregister(@PathVariable String peerId) {
+    public void unregister(@PathVariable String peerId) {
         listPeers.remove(peerId);
     }
 
@@ -59,8 +60,14 @@ public class Controller {
      *
        * In other words, a specific peer won't share a specific file anymore*/
     @RequestMapping(value = "/files/{fileId}", method = RequestMethod.DELETE)
-    public void messageDeleteMetadata(@PathVariable String fileId) {
+    public void deleteFile(@PathVariable String fileId) {
+        if(!mapperMetadata.containsKey(fileId))
+            return ; // code d'erreur
+
         mapperMetadata.remove(fileId);
+        FileDelete fileDelete = new FileDelete(fileId);
+        if(!fileDelete.deleteFile())
+            return ; // code d'erreur
     }
 
 
@@ -77,7 +84,7 @@ public class Controller {
      * If this the server of this peer contains this file, he will be able to send it
        * if this peer is not in the list of the available peers for the file we ask, he wont be able to send it */
     @RequestMapping(value = "/files/{fileId}", method = RequestMethod.GET)
-    public String messageGetFile(@PathVariable String fileId) {
+    public String getFile(@PathVariable String fileId) {
         if(!mapperMetadata.containsKey(fileId))
             return null;
 
@@ -86,5 +93,17 @@ public class Controller {
         return fileData.getData();
     }
 
+    @RequestMapping(value = "/files/{fileId}", method = RequestMethod.POST)
+    public void uploadFile(@PathVariable String fileId, @RequestBody String content) {
+        if(!mapperMetadata.containsKey(fileId))
+            return ; // code d'erreur
+        StringWriter fileWrite = new StringWriter(content,fileId);
+        try {
+            fileWrite.writeFile();
+        }
+        catch (IOException e) {
+            return ; // code d'erreur
+        }
+    }
 
 }

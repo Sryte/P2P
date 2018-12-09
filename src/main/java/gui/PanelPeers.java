@@ -23,7 +23,7 @@ public class PanelPeers extends JPanel {
 
         // Button Listening
         register_button.addActionListener(registerButtonListener);
-        unregister_button.addActionListener(registerButtonListener);
+        unregister_button.addActionListener(unregisterButtonListener);
         //listPeers_button.addActionListener(new listPeersButtonListener());
 
         // Configurations globales du panel

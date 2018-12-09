@@ -122,6 +122,7 @@ public class Client extends JFrame implements Observer{
             try {
                 String url = panel_peers.getSelectedPeer();
                 rqt.unregisterPeers(panel_peers.getSelectedPeer(),myURL.getURL());
+                panel_peers.removePeer(url);
                 controller.updatelistPeers(panel_peers.getListPeers());
             } catch (Exception e) {
                 e.printStackTrace();

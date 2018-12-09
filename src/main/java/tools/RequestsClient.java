@@ -10,8 +10,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
-import server.Metadata;
-import server.Peer;
 
 import java.io.*;
 import java.util.ArrayList;

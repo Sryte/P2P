@@ -33,6 +33,13 @@ public class Metadata {
         this.name = name;
     }
 
-
+    @Override
+    public String toString() {
+        return "Metadata{" +
+                "fileId='" + fileId + '\'' +
+                ", size='" + size + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 
 }

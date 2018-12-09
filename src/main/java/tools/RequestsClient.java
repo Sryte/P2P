@@ -1,5 +1,6 @@
 package tools;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -7,12 +8,16 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.client.RestTemplate;
+import server.Metadata;
+import server.Peer;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
 
 public class RequestsClient {
 
@@ -109,8 +114,8 @@ public class RequestsClient {
         br.close();
     }
 
-    public void getMetadata(String url) throws Exception {
-        DefaultHttpClient httpClient = new DefaultHttpClient();
+    public HashMap<String, Metadata>/*void*/ getMetadata(String url) /*throws Exception*/ {
+        /*DefaultHttpClient httpClient = new DefaultHttpClient();
 
         url = "http://"+url+"/files";
         HttpGet getMeta = new HttpGet(url);
@@ -127,28 +132,37 @@ public class RequestsClient {
 
         System.out.println(response.getStatusLine().getStatusCode());
 
-        br.close();
-    }
+        br.close();*/
 
-    public void listPeers(String url) throws Exception {
-        DefaultHttpClient httpClient = new DefaultHttpClient();
+        RestTemplate restTemplate = new RestTemplate();
+        HashMap<String, Metadata> metadata = new HashMap<>();
+        String result = restTemplate.getForObject("http://" +url + "/files", String.class);
 
-        url = "http://"+url+"/peers";
-        HttpGet getPeers = new HttpGet(url);
-
-        HttpResponse response = httpClient.execute(getPeers);
-
-        BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
-
-        String output;
-        System.out.println("Output from Server .... \n");
-        while ((output = br.readLine()) != null) {
-            System.out.println(output);
+        try {
+            metadata = new ObjectMapper().readValue(result, new TypeReference<HashMap<String, Metadata>>(){});
+        } catch (IOException e){
+            e.printStackTrace();
         }
 
-        System.out.println(response.getStatusLine().getStatusCode());
+        System.out.println(metadata);
 
-        br.close();
+        return metadata;
+    }
+
+    public List<Peer> getListPeers(String url) {
+        RestTemplate restTemplate = new RestTemplate();
+        List<Peer> peers = new ArrayList<>();
+        String result = restTemplate.getForObject("http://" +url + "/peers", String.class);
+
+        try {
+            peers = new ObjectMapper().readValue(result, new TypeReference<List<Peer>>(){});
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+        System.out.println(peers.get(0).getUrl());
+
+        return peers;
     }
 
     public void unregisterPeers(String url, String peerId) throws Exception {

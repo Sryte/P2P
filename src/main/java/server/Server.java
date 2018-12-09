@@ -17,9 +17,9 @@ public class Server extends AbstractServer{
     /* adding a specific peer to the list of peers of the network */
     @RequestMapping(value = "/peers", method = RequestMethod.POST)
     public void register(@RequestBody Peer peer) {
-        if(!listPeers.contains(peer.getURL()))
+        if(!listPeers.contains(peer.getUrl()))
         {
-            listPeers.add(peer.getURL());
+            listPeers.add(peer.getUrl());
             notifyObserverListPeers(this.listPeers);
         }
     }

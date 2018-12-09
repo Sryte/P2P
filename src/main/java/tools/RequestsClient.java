@@ -19,23 +19,12 @@ public class RequestsClient {
     public void uploadFilesData(String url, String name, String fileId) throws Exception {
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
-        FileReader fr = new FileReader(System.getProperty("user.dir")+"\\share\\" + name);
-        BufferedReader br = new BufferedReader(fr);
-
-        String reader;
-        String fileContent = "";
-
-        while ((reader = br.readLine()) != null) {
-            fileContent+=reader;
-        }
-        //System.out.println(fileContent);
-        fileContent = Base64.getEncoder().encodeToString(fileContent.getBytes());
-        System.out.println(fileContent);
+        FileReading fr = new FileReading(System.getProperty("user.dir")+"\\share\\" + name);
 
         url = "http://"+url+"/files/"+fileId;
         HttpPost postFileData = new HttpPost(url);
 
-        String payload = "{\"content\":\""+fileContent+"\"}";
+        String payload = "{\"content\":\""+fr.getData()+"\"}";
         StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
 
         postFileData.setEntity(entity);
@@ -44,8 +33,6 @@ public class RequestsClient {
 
         System.out.println(response.getStatusLine().getStatusCode());
 
-        br.close();
-        fr.close();
     }
 
     public void uploadFilesMetadata(String url, String name) throws Exception {
@@ -57,7 +44,7 @@ public class RequestsClient {
         String path = System.getProperty("user.dir")+"\\share\\" + name;
         File file = new File(path);
         long size = file.length();
-        String size2 = new String(String.valueOf(size));
+        String size2 = (String.valueOf(size));
 
         long fileId = name.hashCode() * size2.hashCode();
 
@@ -87,7 +74,7 @@ public class RequestsClient {
         System.out.println(response.getStatusLine().getStatusCode());
     }
 
-    public void getFilesData(String url, String fileId) throws Exception { //Is OK
+    public void getFilesData(String url, String fileId) throws Exception {
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
         url = "http://"+url+"/files/"+fileId;
@@ -103,7 +90,6 @@ public class RequestsClient {
             content+= reader;
         }
 
-        //System.out.println(fileContent);
         System.out.println(response.getStatusLine().getStatusCode());
 
         br.close();
@@ -140,11 +126,11 @@ public class RequestsClient {
 
         BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
 
-        String output;
+        /*String output;
         System.out.println("Output from Server .... \n");
         while ((output = br.readLine()) != null) {
             System.out.println(output);
-        }
+        }*/
 
         System.out.println(response.getStatusLine().getStatusCode());
 

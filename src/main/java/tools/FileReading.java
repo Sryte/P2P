@@ -1,8 +1,8 @@
 package tools;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Base64;
 
 public class FileReading {
@@ -22,7 +22,7 @@ public class FileReading {
             String content = "";
             try
             {
-                java.io.FileReader fr = new java.io.FileReader(String.valueOf(Paths.get(filePath))); //change to relative path
+                FileReader fr = new FileReader(filePath);
                 BufferedReader br = new BufferedReader(fr);
 
                 String reader;
@@ -33,8 +33,6 @@ public class FileReading {
             }
 
             content = Base64.getEncoder().encodeToString(fileContent.getBytes());
-            System.out.println(content);
-
         }
         catch (IOException e)
         {
@@ -44,9 +42,7 @@ public class FileReading {
     }
 
     public FileReading(String file) {
-        String path = System.getProperty("user.dir")+"\\share\\" + file;
-        //System.out.println(path);
-        this.data = encodeBase64(path);
+        this.data = encodeBase64(file);
     }
 
 }

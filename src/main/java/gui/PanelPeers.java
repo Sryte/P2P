@@ -20,6 +20,7 @@ public class PanelPeers extends JPanel {
     private List<String> listPeers = new ArrayList<>();
     JScrollPane jsp = new JScrollPane();
     private JTextField jtf = new JTextField();
+    private JList jList;
     private JButton register_button = new JButton("Register");
     private JButton unregister_button = new JButton("Unregister");
     private JButton listPeers_button = new JButton("List Peers");
@@ -58,8 +59,8 @@ public class PanelPeers extends JPanel {
         for(int i = 0 ; i<100 ; i++ )
             list_peers.add("192.168.10.4:8080");*/
 
-        JList list = new JList(listPeers.toArray());
-        jsp.add(list);
+        jList = new JList(listPeers.toArray());
+        jsp.add(jList);
         jsp.setPreferredSize(new Dimension(140,140));
         center.add(jsp);
 
@@ -88,10 +89,13 @@ public class PanelPeers extends JPanel {
     class registerButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             MyURL myURL = new MyURL();
+            if(myURL.getURL().equals(jtf.getText()))
+                return;
             try {
                 rqt.registerPeers(jtf.getText(),myURL.getURL());
                 listPeers.add(jtf.getText());
-                jsp.setViewportView(new JList(listPeers.toArray()));
+                jList = new JList(listPeers.toArray());
+                jsp.setViewportView(jList);
                 jtf.setText("");
                 controller.updatelistPeers(listPeers);
 
@@ -105,10 +109,12 @@ public class PanelPeers extends JPanel {
         public void actionPerformed(ActionEvent event) {
             MyURL myURL = new MyURL();
             try {
-                // bug
-                rqt.unregisterPeers(jsp.getViewport().toString(),myURL.getURL());
-                listPeers.remove(jsp.getViewport().toString());
-                jsp.setViewportView(new JList(listPeers.toArray()));
+                int index = jList.getSelectedIndex();
+                rqt.unregisterPeers(listPeers.get(index),myURL.getURL());
+                listPeers.remove(index);
+                jList = new JList(listPeers.toArray());
+                jsp.setViewportView(jList);
+                controller.updatelistPeers(listPeers);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -117,6 +123,7 @@ public class PanelPeers extends JPanel {
 
     public void setlistPeers(List<String> list_peers) {
         this.listPeers = list_peers;
-        jsp.setViewportView(new JList(listPeers.toArray()));
+        jList = new JList(listPeers.toArray());
+        jsp.setViewportView(jList);
     }
 }

@@ -14,10 +14,9 @@ public class PanelResult extends JPanel {
         // Configurations globales du panel
         // ----------------------------------
         this.setLayout(new CardLayout());
-        //this.add(p_infos);
-        //this.add(p_peers);
+        this.add(p_infos);
+        this.add(p_peers);
         this.add(p_files);
-
         // ----------------------------------
 
     }

@@ -4,26 +4,35 @@ package gui;
 import controller.AbstractController;
 import observer.Observer;
 import server.Metadata;
+import tools.MyURL;
+import tools.RequestsClient;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.List;
 
 
 public class Client extends JFrame implements Observer{
 
-    protected JPanel center_container = new JPanel();
-    protected PanelPeers panel_peers;
-    protected PanelFiles panel_files = new PanelFiles();
-    protected JPanel panel_result = new PanelResult();
-    protected JPanel panel_log = new PanelLog();
-    protected JPanel global_container = new JPanel();
+    private AbstractController controller;
+
+    private RequestsClient rqt = new RequestsClient();
+    private JPanel center_container = new JPanel();
+    private PanelPeers panel_peers;
+    private PanelFiles panel_files = new PanelFiles();
+    private JPanel panel_result = new PanelResult();
+    private JPanel panel_log = new PanelLog();
+    private JPanel global_container = new JPanel();
 
     private final static int width = 900;
     private final static int height = 500;
 
     public Client(AbstractController controller){
+
+        this.controller = controller;
 
         // Configurations générales de la fenêtre
         // -----------------------------------
@@ -36,7 +45,7 @@ public class Client extends JFrame implements Observer{
 
         // Creation des panels
         // -----------------------------------
-        panel_peers = new PanelPeers(controller);
+        panel_peers = new PanelPeers(new RegisterButtonListener(), new UnregisterButtonListener());
         // -----------------------------------
 
         initComposant();
@@ -83,11 +92,55 @@ public class Client extends JFrame implements Observer{
     }
 
     public void updateListPeers(List<String> list) {
-        panel_peers.setlistPeers(list);
+        panel_peers.setListPeers(list);
     }
     public void updateMapperMetadata(HashMap<String, Metadata> mapper) {
 
     }
+
+    class RegisterButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            MyURL myURL = new MyURL();
+            String url = panel_peers.getJtfText();
+            if(myURL.getURL().equals(url))
+                return;
+            try {
+                rqt.registerPeers(url,myURL.getURL());
+
+                panel_peers.addPeer(url);
+                controller.updatelistPeers(panel_peers.getListPeers());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    class UnregisterButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            MyURL myURL = new MyURL();
+            try {
+                String url = panel_peers.getSelectedPeer();
+                rqt.unregisterPeers(panel_peers.getSelectedPeer(),myURL.getURL());
+                controller.updatelistPeers(panel_peers.getListPeers());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /*
+    class ListPeersButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            MyURL myURL = new MyURL();
+            try {
+                int index = jList.getSelectedIndex();
+                rqt.listPeers(listPeers.get(index));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }*/
 
 
 }

@@ -37,10 +37,19 @@ public class Server extends AbstractServer{
     /* Delete a specific peer in the list of the available peers */
     @RequestMapping(value = "/peers/{peerId}", method = RequestMethod.DELETE)
     public void unregister(@PathVariable String peerId) {
-        for(Peer p : listPeers)
-            if(p.getUrl().equals(peerId))
-                listPeers.remove(p);
-        notifyObserverListPeers(this.listPeers);
+
+        int index = 0;
+        for(Peer p : listPeers) {
+            if(p.getUrl().equals(peerId)) {
+                break;
+            }
+            index++;
+        }
+        if(index<=listPeers.size()) {
+            listPeers.remove(index);
+            notifyObserverListPeers(this.listPeers);
+        }
+
     }
 
     /* Getting the metadata list and checking if it's empty */

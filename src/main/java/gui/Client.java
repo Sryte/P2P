@@ -26,7 +26,10 @@ public class Client extends JFrame implements Observer{
     private JPanel center_container = new JPanel();
     private PanelPeers panel_peers = new PanelPeers(new RegisterButtonListener(), new UnregisterButtonListener(), new ListPeersButtonListener(), new ListFilesButtonListener());
     private PanelFiles panel_files = new PanelFiles(new ShareButtonListener());
-    private PanelResult panel_result = new PanelResult();
+    private PanelResult_infos panelResultInfos = new PanelResult_infos();
+    private PanelResult_peers panelResultPeers = new PanelResult_peers(new RegisterButtonListener());
+    private PanelResult_files panelResultFiles = new PanelResult_files();
+    private PanelResult panel_result;
     private PanelLog panel_log = new PanelLog();
     private JPanel global_container = new JPanel();
 
@@ -53,11 +56,9 @@ public class Client extends JFrame implements Observer{
     }
 
     private void initComposant(){
-        /*
-        // Backgrounds de test
-        panel_peers.setBackground(Color.cyan);
-        panel_result.setBackground(Color.green);
-        panel_log.setBackground(Color.gray);*/
+
+        // Init panel result
+        panel_result = new PanelResult(panelResultInfos,panelResultPeers,panelResultFiles);
 
 
         // Dimensionnement des panels
@@ -100,7 +101,13 @@ public class Client extends JFrame implements Observer{
     class RegisterButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             MyURL myURL = new MyURL();
-            String url = panel_peers.getJtfText();
+            String url = new String();
+            if(event.getSource() == panel_peers.getRegister_button())
+                url = panel_peers.getJtfText();
+            else {
+                Peer p = panelResultPeers.getSelectedPeer();
+                url = p.getUrl();
+            }
             panel_peers.setJtfText("");
 
             if(myURL.getURL().equals(url))
@@ -163,7 +170,10 @@ public class Client extends JFrame implements Observer{
             }
             else {
                 try {
-                    rqt.getListPeers(peer.getUrl());
+                    List<Peer> list = rqt.getListPeers(peer.getUrl());
+
+                    panelResultPeers.setListPeers(list);
+                    panelResultPeers.refreshJSP();
 
                     panel_result.changeCardLayout("PEERS");
                     panel_log.setTexte("Successful List Peers");

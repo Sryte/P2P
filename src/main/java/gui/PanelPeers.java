@@ -113,6 +113,9 @@ public class PanelPeers extends JPanel {
         listPeers.remove(peer);
     }
 
+    public JButton getRegister_button() {
+        return register_button;
+    }
 
 
 

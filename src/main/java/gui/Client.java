@@ -91,6 +91,7 @@ public class Client extends JFrame implements Observer{
 
     public void updateListPeers(List<Peer> list) {
         panel_peers.setListPeers(list);
+        panel_peers.refreshJSP();
     }
     public void updateMapperMetadata(HashMap<String, Metadata> mapper) {
 
@@ -111,6 +112,7 @@ public class Client extends JFrame implements Observer{
                     rqt.registerPeers(url,myURL.getURL());
 
                     panel_peers.addPeer(url);
+                    panel_peers.refreshJSP();
                     controller.updatelistPeers(panel_peers.getListPeers());
                     panel_log.setTexte("Successful Register");
 
@@ -137,6 +139,7 @@ public class Client extends JFrame implements Observer{
                     rqt.unregisterPeers(peer.getUrl(),myURL.getURL());
 
                     panel_peers.removePeer(peer);
+                    panel_peers.refreshJSP();
                     controller.updatelistPeers(panel_peers.getListPeers());
                     panel_log.setTexte("Successful Unregister");
                 } catch (Exception e) {

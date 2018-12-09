@@ -38,6 +38,7 @@ public class Server extends AbstractServer{
     @RequestMapping(value = "/peers/{peerId}", method = RequestMethod.DELETE)
     public void unregister(@PathVariable String peerId) {
         listPeers.remove(peerId);
+        notifyObserverListPeers(this.listPeers);
     }
 
     /* Getting the metadata list and checking if it's empty */

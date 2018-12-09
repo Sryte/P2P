@@ -18,13 +18,13 @@ public class PanelPeers extends JPanel {
     private JButton listPeers_button = new JButton("List Peers");
     private JButton listFiles_button = new JButton("List Files");
 
-    public PanelPeers(Client.RegisterButtonListener registerButtonListener, Client.UnregisterButtonListener unregisterButtonListener) {
+    public PanelPeers(Client.RegisterButtonListener registerButtonListener, Client.UnregisterButtonListener unregisterButtonListener, Client.ListPeersButtonListener listPeersButtonListener) {
 
 
         // Button Listening
         register_button.addActionListener(registerButtonListener);
         unregister_button.addActionListener(unregisterButtonListener);
-        //listPeers_button.addActionListener(new listPeersButtonListener());
+        listPeers_button.addActionListener(listPeersButtonListener);
 
         // Configurations globales du panel
         // ----------------------------------
@@ -88,7 +88,10 @@ public class PanelPeers extends JPanel {
         listPeers.add(peer);
         jList = new JList(listPeers.toArray());
         jsp.setViewportView(jList);
-        jtf.setText("");
+    }
+
+    public void setJtfText(String text) {
+        jtf.setText(text);
     }
 
     public String getJtfText() {

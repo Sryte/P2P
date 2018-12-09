@@ -21,10 +21,10 @@ public class Client extends JFrame implements Observer{
 
     private RequestsClient rqt = new RequestsClient();
     private JPanel center_container = new JPanel();
-    private PanelPeers panel_peers;
+    private PanelPeers panel_peers = new PanelPeers(new RegisterButtonListener(), new UnregisterButtonListener(), new ListPeersButtonListener());
     private PanelFiles panel_files = new PanelFiles();
-    private JPanel panel_result = new PanelResult();
-    private JPanel panel_log = new PanelLog();
+    private PanelResult panel_result = new PanelResult();
+    private PanelLog panel_log = new PanelLog();
     private JPanel global_container = new JPanel();
 
     private final static int width = 900;
@@ -41,11 +41,6 @@ public class Client extends JFrame implements Observer{
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        // -----------------------------------
-
-        // Creation des panels
-        // -----------------------------------
-        panel_peers = new PanelPeers(new RegisterButtonListener(), new UnregisterButtonListener());
         // -----------------------------------
 
         initComposant();
@@ -102,7 +97,7 @@ public class Client extends JFrame implements Observer{
         public void actionPerformed(ActionEvent event) {
             MyURL myURL = new MyURL();
             String url = panel_peers.getJtfText();
-            if(myURL.getURL().equals(url))
+            if(myURL.getURL().equals(url) || panel_peers.getListPeers().contains(url))
                 return;
             try {
                 rqt.registerPeers(url,myURL.getURL());
@@ -113,6 +108,7 @@ public class Client extends JFrame implements Observer{
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            panel_peers.setJtfText("");
         }
     }
 
@@ -130,18 +126,18 @@ public class Client extends JFrame implements Observer{
         }
     }
 
-    /*
+
     class ListPeersButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             MyURL myURL = new MyURL();
             try {
-                int index = jList.getSelectedIndex();
-                rqt.listPeers(listPeers.get(index));
+                rqt.listPeers(panel_peers.getSelectedPeer());
+                panel_result.changeCardLayout("PEERS");
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-    }*/
+    }
 
 
 }

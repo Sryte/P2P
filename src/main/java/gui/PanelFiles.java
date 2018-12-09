@@ -7,9 +7,10 @@ import java.util.List;
 
 public class PanelFiles extends JPanel {
 
+    private JTable tableau;
     private List<String> list_files = new ArrayList<>();
     private JTextField jtf = new JTextField();
-    private JButton share_button = new JButton("Share");
+    private JButton share_button = new JButton("Share a new file");
     private JButton upload_button = new JButton("Upload");
     private JButton delete_button = new JButton("Delete");
 
@@ -34,14 +35,13 @@ public class PanelFiles extends JPanel {
         JPanel center = new JPanel();
         center.setLayout( new FlowLayout(FlowLayout.CENTER, 30, 10) );
 
-        // test
-        for(int i = 0 ; i<100 ; i++ )
-            list_files.add("f1.txt");
+        String title[] = {"FileId","Size", "FileName"};
+        Object[][] data = {{"jhjdvuhuhxvuhisjcbisvbudsdv","25","f1.txt"},{"ksdcn","25","f2.txt"}};
 
-        JList list = new JList(list_files.toArray());
+        tableau = new JTable(data,title);
 
-        JScrollPane jsp = new JScrollPane(list);
-        jsp.setPreferredSize(new Dimension(140,140));
+        JScrollPane jsp = new JScrollPane(tableau);
+        jsp.setPreferredSize(new Dimension(250,140));
         center.add(jsp);
 
         // ajout des boutons
@@ -55,9 +55,6 @@ public class PanelFiles extends JPanel {
         // ---------------------------------------------
         JPanel south = new JPanel();
 
-        south.add(new JLabel("Share a new File : "));
-        jtf.setPreferredSize(new Dimension(120,20));
-        south.add(jtf);
         south.add(share_button);
 
         this.add(south, BorderLayout.SOUTH);

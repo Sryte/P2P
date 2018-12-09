@@ -47,11 +47,6 @@ public class PanelPeers extends JPanel {
         JPanel center = new JPanel();
         center.setLayout( new FlowLayout(FlowLayout.CENTER, 30, 10) );
 
-        // test
-        /*
-        for(int i = 0 ; i<100 ; i++ )
-            list_peers.add("192.168.10.4:8080");*/
-
         jList = new JList(listPeers.toArray());
         jsp.add(jList);
         jsp.setPreferredSize(new Dimension(140,140));

@@ -99,27 +99,27 @@ public class Client extends JFrame implements Observer{
             String url = panel_peers.getJtfText();
             panel_peers.setJtfText("");
 
-            if(myURL.getURL().equals(url)) {
+            if(myURL.getURL().equals(url))
                 panel_log.setTexte("You can't connect to yourself...");
-                return;
-            }
-
-            if(panel_peers.getListPeers().contains(url)) {
+            else if (panel_peers.getListPeers().contains(url))
                 panel_log.setTexte("This peer is already registered !");
-                return;
+            else {
+                try {
+                    rqt.registerPeers(url,myURL.getURL());
+
+                    panel_peers.addPeer(url);
+                    controller.updatelistPeers(panel_peers.getListPeers());
+                    panel_log.setTexte("Successful Register");
+
+                } catch (Exception e) {
+                    panel_log.setTexte("Error : Invalid URL ( Recall : IP:PORT )");
+                }
             }
 
-            try {
-                rqt.registerPeers(url,myURL.getURL());
-
-                panel_peers.addPeer(url);
-                controller.updatelistPeers(panel_peers.getListPeers());
-                panel_log.setTexte("Successful Register");
-
-            } catch (Exception e) {
-                panel_log.setTexte("Error : Invalid URL ( Recall : IP:PORT )");
-            }
+            panel_result.changeCardLayout("INFOS");
         }
+
+
     }
 
     class UnregisterButtonListener implements ActionListener {
@@ -127,20 +127,21 @@ public class Client extends JFrame implements Observer{
             MyURL myURL = new MyURL();
             String url = panel_peers.getSelectedPeer();
 
-            if(url.equals("")) {
+            if(url.equals(""))
                 panel_log.setTexte("You have to select a peer");
-                return;
+            else {
+                try {
+                    rqt.unregisterPeers(url,myURL.getURL());
+
+                    panel_peers.removePeer(url);
+                    controller.updatelistPeers(panel_peers.getListPeers());
+                    panel_log.setTexte("Successful Unregister");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
-            try {
-                rqt.unregisterPeers(url,myURL.getURL());
-
-                panel_peers.removePeer(url);
-                controller.updatelistPeers(panel_peers.getListPeers());
-                panel_log.setTexte("Successful Unregister");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            panel_result.changeCardLayout("INFOS");
         }
     }
 
@@ -152,18 +153,21 @@ public class Client extends JFrame implements Observer{
 
             if(url.equals("")) {
                 panel_log.setTexte("You have to select a peer");
-                return;
+                panel_result.changeCardLayout("INFOS");
             }
+            else {
+                try {
+                    rqt.listPeers(url);
 
-            try {
-                rqt.listPeers(url);
-
-                panel_result.changeCardLayout("PEERS");
-                panel_log.setTexte("Successful List Peers");
-            } catch (Exception e) {
-                e.printStackTrace();
+                    panel_result.changeCardLayout("PEERS");
+                    panel_log.setTexte("Successful List Peers");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
+
+
     }
 
     class ListFilesButtonListener implements ActionListener {
@@ -173,16 +177,17 @@ public class Client extends JFrame implements Observer{
 
             if(url.equals("")) {
                 panel_log.setTexte("You have to select a peer");
-                return;
+                panel_result.changeCardLayout("INFOS");
             }
+            else {
+                try {
+                    rqt.getMetadata(url);
 
-            try {
-                rqt.getMetadata(url);
-
-                panel_result.changeCardLayout("FILES");
-                panel_log.setTexte("Successful List Files");
-            } catch (Exception e) {
-                e.printStackTrace();
+                    panel_result.changeCardLayout("FILES");
+                    panel_log.setTexte("Successful List Files");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

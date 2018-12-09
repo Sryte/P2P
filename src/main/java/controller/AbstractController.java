@@ -1,7 +1,7 @@
 package controller;
 
 import server.AbstractServer;
-import server.Metadata;
+import tools.Metadata;
 
 import java.util.ArrayList;
 import java.util.HashMap;

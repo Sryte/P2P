@@ -1,11 +1,16 @@
 package gui;
 
+import tools.Metadata;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class PanelFiles extends JPanel {
+
+    private HashMap<String, Metadata> mapperMetadata = new HashMap<>();
 
     private JTable tableau;
     private List<String> list_files = new ArrayList<>();
@@ -14,7 +19,10 @@ public class PanelFiles extends JPanel {
     private JButton upload_button = new JButton("Upload");
     private JButton delete_button = new JButton("Delete");
 
-    public PanelFiles() {
+    public PanelFiles(Client.ShareButtonListener shareButtonListener) {
+
+        // Button Listening
+        share_button.addActionListener(shareButtonListener);
 
         // Configurations globales du panel
         // ----------------------------------

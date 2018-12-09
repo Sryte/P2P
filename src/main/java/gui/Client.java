@@ -3,7 +3,7 @@ package gui;
 
 import controller.AbstractController;
 import observer.Observer;
-import server.Metadata;
+import tools.Metadata;
 import tools.MyURL;
 import tools.RequestsClient;
 
@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,11 +19,12 @@ import java.util.List;
 public class Client extends JFrame implements Observer{
 
     private AbstractController controller;
+    final JFileChooser fc = new JFileChooser();
 
     private RequestsClient rqt = new RequestsClient();
     private JPanel center_container = new JPanel();
     private PanelPeers panel_peers = new PanelPeers(new RegisterButtonListener(), new UnregisterButtonListener(), new ListPeersButtonListener(), new ListFilesButtonListener());
-    private PanelFiles panel_files = new PanelFiles();
+    private PanelFiles panel_files = new PanelFiles(new ShareButtonListener());
     private PanelResult panel_result = new PanelResult();
     private PanelLog panel_log = new PanelLog();
     private JPanel global_container = new JPanel();
@@ -188,6 +190,21 @@ public class Client extends JFrame implements Observer{
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        }
+    }
+
+    class ShareButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            int returnVal = fc.showOpenDialog(Client.this);
+
+            if(returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+                String name = file.getName();
+                long size = file.length();
+                long fileId = name.hashCode() * String.valueOf(size).hashCode();
+                if(fileId<0)
+                    fileId*=-1;
             }
         }
     }

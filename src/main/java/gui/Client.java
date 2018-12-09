@@ -159,7 +159,7 @@ public class Client extends JFrame implements Observer{
             }
             else {
                 try {
-                    rqt.listPeers(url);
+                    rqt.getListPeers(url);
 
                     panel_result.changeCardLayout("PEERS");
                     panel_log.setTexte("Successful List Peers");

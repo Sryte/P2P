@@ -117,5 +117,6 @@ public class PanelPeers extends JPanel {
 
     public void setlistPeers(List<String> list_peers) {
         this.listPeers = list_peers;
+        jsp.setViewportView(new JList(listPeers.toArray()));
     }
 }

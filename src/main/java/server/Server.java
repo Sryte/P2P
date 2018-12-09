@@ -1,15 +1,16 @@
 package server;
 
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 import tools.FileDelete;
 import tools.FileReading;
 import tools.StringWriter;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@SpringBootApplication
 @RestController
 public class Server extends AbstractServer{
 

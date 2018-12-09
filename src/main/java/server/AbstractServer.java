@@ -13,7 +13,7 @@ import java.util.List;
 
 public abstract class AbstractServer implements Observable {
 
-    protected List<String> listPeers = new ArrayList<>();
+    protected List<Peer> listPeers = new ArrayList<>();
 
     /* The metadata list is a hashmap to be able to attribute keys to files and peers */
     protected HashMap<String, Metadata> mapperMetadata = new HashMap<>();
@@ -21,7 +21,7 @@ public abstract class AbstractServer implements Observable {
     private ArrayList<Observer> listObserver = new ArrayList<>();
 
     public abstract void register(@RequestBody Peer peer);
-    public abstract List<String> getListPeers();
+    public abstract List<Peer> getListPeers();
     public abstract void unregister(@PathVariable String peerId);
     public abstract HashMap<String,Metadata> getMetadata();
     public abstract void deleteFile(@PathVariable String fileId);
@@ -37,7 +37,7 @@ public abstract class AbstractServer implements Observable {
         listObserver = new ArrayList<Observer>();
     }
 
-    public void notifyObserverListPeers(List<String> list) {
+    public void notifyObserverListPeers(List<Peer> list) {
         for(Observer obs : listObserver)
             obs.updateListPeers(list);
     }
@@ -46,7 +46,7 @@ public abstract class AbstractServer implements Observable {
             obs.updateMapperMetadata(mapper);
     }
 
-    public void setListPeers(List<String> listPeers) {
+    public void setListPeers(List<Peer> listPeers) {
         this.listPeers = listPeers;
     }
 

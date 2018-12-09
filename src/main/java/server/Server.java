@@ -15,16 +15,18 @@ public class Server extends AbstractServer{
     /* adding a specific peer to the list of peers of the network */
     @RequestMapping(value = "/peers", method = RequestMethod.POST)
     public void register(@RequestBody Peer peer) {
-        if(!listPeers.contains(peer.getUrl()))
-        {
-            listPeers.add(peer.getUrl());
-            notifyObserverListPeers(this.listPeers);
-        }
+
+        for(Peer p : listPeers)
+            if(p.getUrl().equals(peer.getUrl()))
+                return;
+
+        listPeers.add(new Peer(peer.getUrl()));
+        notifyObserverListPeers(this.listPeers);
     }
 
     /* Obtain the list of available peers in the network and checking if the list is empty*/
     @RequestMapping(value = "/peers", method = RequestMethod.GET)
-    public List<String> getListPeers()
+    public List<Peer> getListPeers()
     {
         if (listPeers.isEmpty())
             return null;
@@ -35,7 +37,9 @@ public class Server extends AbstractServer{
     /* Delete a specific peer in the list of the available peers */
     @RequestMapping(value = "/peers/{peerId}", method = RequestMethod.DELETE)
     public void unregister(@PathVariable String peerId) {
-        listPeers.remove(peerId);
+        for(Peer p : listPeers)
+            if(p.getUrl().equals(peerId))
+                listPeers.remove(p);
         notifyObserverListPeers(this.listPeers);
     }
 

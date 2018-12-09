@@ -1,6 +1,8 @@
 package gui;
 
 
+import tools.Peer;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -9,7 +11,7 @@ import java.util.List;
 
 public class PanelPeers extends JPanel {
 
-    private List<String> listPeers = new ArrayList<>();
+    private List<Peer> listPeers = new ArrayList<>();
     JScrollPane jsp = new JScrollPane();
     private JTextField jtf = new JTextField();
     private JList jList;
@@ -74,14 +76,18 @@ public class PanelPeers extends JPanel {
 
     }
 
-    public void setListPeers(List<String> list_peers) {
+    public void setListPeers(List<Peer> list_peers) {
         this.listPeers = list_peers;
-        jList = new JList(listPeers.toArray());
-        jsp.setViewportView(jList);
     }
 
     public void addPeer(String peer) {
-        listPeers.add(peer);
+        listPeers.add(new Peer(peer));
+    }
+
+    public void refreshJSP() {
+        /*List<String> s_list = new ArrayList<>();
+        for(Peer p : listPeers)
+            s_list.add(p.getUrl());*/
         jList = new JList(listPeers.toArray());
         jsp.setViewportView(jList);
     }
@@ -94,22 +100,20 @@ public class PanelPeers extends JPanel {
         return jtf.getText();
     }
 
-    public List<String> getListPeers() {
+    public List<Peer> getListPeers() {
         return listPeers;
     }
 
-    public String getSelectedPeer() {
+    public Peer getSelectedPeer() {
         int index = jList.getSelectedIndex();
 
         if(index==-1)
-            return "";
+            return null;
         return listPeers.get(index);
     }
 
-    public void removePeer(String peer) {
+    public void removePeer(Peer peer) {
         listPeers.remove(peer);
-        jList = new JList(listPeers.toArray());
-        jsp.setViewportView(jList);
     }
 
 

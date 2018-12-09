@@ -5,6 +5,7 @@ import controller.AbstractController;
 import observer.Observer;
 import tools.Metadata;
 import tools.MyURL;
+import tools.Peer;
 import tools.RequestsClient;
 
 import javax.swing.*;
@@ -88,7 +89,7 @@ public class Client extends JFrame implements Observer{
         this.setContentPane(global_container);
     }
 
-    public void updateListPeers(List<String> list) {
+    public void updateListPeers(List<Peer> list) {
         panel_peers.setListPeers(list);
     }
     public void updateMapperMetadata(HashMap<String, Metadata> mapper) {
@@ -127,15 +128,15 @@ public class Client extends JFrame implements Observer{
     class UnregisterButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             MyURL myURL = new MyURL();
-            String url = panel_peers.getSelectedPeer();
+            Peer peer = panel_peers.getSelectedPeer();
 
-            if(url.equals(""))
+            if(peer == null)
                 panel_log.setTexte("You have to select a peer");
             else {
                 try {
-                    rqt.unregisterPeers(url,myURL.getURL());
+                    rqt.unregisterPeers(peer.getUrl(),myURL.getURL());
 
-                    panel_peers.removePeer(url);
+                    panel_peers.removePeer(peer);
                     controller.updatelistPeers(panel_peers.getListPeers());
                     panel_log.setTexte("Successful Unregister");
                 } catch (Exception e) {
@@ -151,15 +152,15 @@ public class Client extends JFrame implements Observer{
     class ListPeersButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             MyURL myURL = new MyURL();
-            String url = panel_peers.getSelectedPeer();
+            Peer peer = panel_peers.getSelectedPeer();
 
-            if(url.equals("")) {
+            if(peer == null) {
                 panel_log.setTexte("You have to select a peer");
                 panel_result.changeCardLayout("INFOS");
             }
             else {
                 try {
-                    rqt.getListPeers(url);
+                    rqt.getListPeers(peer.getUrl());
 
                     panel_result.changeCardLayout("PEERS");
                     panel_log.setTexte("Successful List Peers");
@@ -175,15 +176,15 @@ public class Client extends JFrame implements Observer{
     class ListFilesButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             MyURL myURL = new MyURL();
-            String url = panel_peers.getSelectedPeer();
+            Peer peer = panel_peers.getSelectedPeer();
 
-            if(url.equals("")) {
+            if(peer == null) {
                 panel_log.setTexte("You have to select a peer");
                 panel_result.changeCardLayout("INFOS");
             }
             else {
                 try {
-                    rqt.getMetadata(url);
+                    rqt.getMetadata(peer.getUrl());
 
                     panel_result.changeCardLayout("FILES");
                     panel_log.setTexte("Successful List Files");

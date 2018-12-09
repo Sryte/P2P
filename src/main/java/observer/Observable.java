@@ -1,6 +1,6 @@
 package observer;
 
-import server.Metadata;
+import tools.Metadata;
 
 import java.util.HashMap;
 import java.util.List;

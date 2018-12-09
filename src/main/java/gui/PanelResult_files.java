@@ -9,6 +9,7 @@ import java.util.List;
 
 public class PanelResult_files extends JPanel {
 
+    private JTable tableau;
     private List<String> list_files = new ArrayList<>();
     private JButton get_button = new JButton("Get");
     private JButton delete_button = new JButton("Delete");
@@ -44,13 +45,14 @@ public class PanelResult_files extends JPanel {
         JPanel p_tableau = new JPanel();
         p_tableau.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-        // test
-        for(int i = 0 ; i<100 ; i++ )
-            list_files.add("f1.txt");
 
-        JList list = new JList(list_files.toArray());
-        JScrollPane jsp = new JScrollPane(list);
-        jsp.setPreferredSize(new Dimension(140,140));
+        String title[] = {"FileId","Size", "FileName"};
+        Object[][] data = {{"jhsdv","25","f1.txt"},{"ksdcn","25","f2.txt"}};
+
+        tableau = new JTable(data,title);
+
+        JScrollPane jsp = new JScrollPane(tableau);
+        jsp.setPreferredSize(new Dimension(250,140));
         p_tableau.add(jsp);
         p_list.add(p_tableau, BorderLayout.CENTER);
         center.add(p_list);

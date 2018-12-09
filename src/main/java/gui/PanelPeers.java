@@ -1,22 +1,14 @@
 package gui;
 
-import controller.AbstractController;
-import tools.MyURL;
-import tools.RequestsClient;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class PanelPeers extends JPanel {
 
-    private AbstractController controller;
-
-    private RequestsClient rqt = new RequestsClient();
     private List<String> listPeers = new ArrayList<>();
     JScrollPane jsp = new JScrollPane();
     private JTextField jtf = new JTextField();
@@ -26,13 +18,14 @@ public class PanelPeers extends JPanel {
     private JButton listPeers_button = new JButton("List Peers");
     private JButton listFiles_button = new JButton("List Files");
 
-    public PanelPeers(AbstractController controller) {
+    public PanelPeers(Client.RegisterButtonListener registerButtonListener, Client.UnregisterButtonListener unregisterButtonListener, Client.ListPeersButtonListener listPeersButtonListener, Client.ListFilesButtonListener listFilesButtonListener) {
 
-        this.controller=controller;
 
         // Button Listening
-        register_button.addActionListener(new registerButtonListener());
-        unregister_button.addActionListener(new unregisterButtonListener());
+        register_button.addActionListener(registerButtonListener);
+        unregister_button.addActionListener(unregisterButtonListener);
+        listPeers_button.addActionListener(listPeersButtonListener);
+        listFiles_button.addActionListener(listFilesButtonListener);
 
         // Configurations globales du panel
         // ----------------------------------
@@ -53,11 +46,6 @@ public class PanelPeers extends JPanel {
         // ---------------------------------------------
         JPanel center = new JPanel();
         center.setLayout( new FlowLayout(FlowLayout.CENTER, 30, 10) );
-
-        // test
-        /*
-        for(int i = 0 ; i<100 ; i++ )
-            list_peers.add("192.168.10.4:8080");*/
 
         jList = new JList(listPeers.toArray());
         jsp.add(jList);
@@ -86,44 +74,45 @@ public class PanelPeers extends JPanel {
 
     }
 
-    class registerButtonListener implements ActionListener {
-        public void actionPerformed(ActionEvent event) {
-            MyURL myURL = new MyURL();
-            if(myURL.getURL().equals(jtf.getText()))
-                return;
-            try {
-                rqt.registerPeers(jtf.getText(),myURL.getURL());
-                listPeers.add(jtf.getText());
-                jList = new JList(listPeers.toArray());
-                jsp.setViewportView(jList);
-                jtf.setText("");
-                controller.updatelistPeers(listPeers);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    class unregisterButtonListener implements ActionListener {
-        public void actionPerformed(ActionEvent event) {
-            MyURL myURL = new MyURL();
-            try {
-                int index = jList.getSelectedIndex();
-                rqt.unregisterPeers(listPeers.get(index),myURL.getURL());
-                listPeers.remove(index);
-                jList = new JList(listPeers.toArray());
-                jsp.setViewportView(jList);
-                controller.updatelistPeers(listPeers);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void setlistPeers(List<String> list_peers) {
+    public void setListPeers(List<String> list_peers) {
         this.listPeers = list_peers;
         jList = new JList(listPeers.toArray());
         jsp.setViewportView(jList);
     }
+
+    public void addPeer(String peer) {
+        listPeers.add(peer);
+        jList = new JList(listPeers.toArray());
+        jsp.setViewportView(jList);
+    }
+
+    public void setJtfText(String text) {
+        jtf.setText(text);
+    }
+
+    public String getJtfText() {
+        return jtf.getText();
+    }
+
+    public List<String> getListPeers() {
+        return listPeers;
+    }
+
+    public String getSelectedPeer() {
+        int index = jList.getSelectedIndex();
+
+        if(index==-1)
+            return "";
+        return listPeers.get(index);
+    }
+
+    public void removePeer(String peer) {
+        listPeers.remove(peer);
+        jList = new JList(listPeers.toArray());
+        jsp.setViewportView(jList);
+    }
+
+
+
+
 }

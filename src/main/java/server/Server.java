@@ -2,9 +2,7 @@ package server;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
-import tools.FileDelete;
-import tools.FileReading;
-import tools.StringWriter;
+import tools.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -43,7 +41,7 @@ public class Server extends AbstractServer{
 
     /* Getting the metadata list and checking if it's empty */
     @RequestMapping(value = "/files", method = RequestMethod.GET)
-    public HashMap<String,Metadata> getMetadata()
+    public HashMap<String, Metadata> getMetadata()
     {
         if (mapperMetadata.isEmpty())
         {

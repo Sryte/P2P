@@ -3,27 +3,38 @@ package gui;
 
 import controller.AbstractController;
 import observer.Observer;
-import server.Metadata;
+import tools.Metadata;
+import tools.MyURL;
+import tools.RequestsClient;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
 
 public class Client extends JFrame implements Observer{
 
-    protected JPanel center_container = new JPanel();
-    protected PanelPeers panel_peers;
-    protected PanelFiles panel_files = new PanelFiles();
-    protected JPanel panel_result = new PanelResult();
-    protected JPanel panel_log = new PanelLog();
-    protected JPanel global_container = new JPanel();
+    private AbstractController controller;
+    final JFileChooser fc = new JFileChooser();
+
+    private RequestsClient rqt = new RequestsClient();
+    private JPanel center_container = new JPanel();
+    private PanelPeers panel_peers = new PanelPeers(new RegisterButtonListener(), new UnregisterButtonListener(), new ListPeersButtonListener(), new ListFilesButtonListener());
+    private PanelFiles panel_files = new PanelFiles(new ShareButtonListener());
+    private PanelResult panel_result = new PanelResult();
+    private PanelLog panel_log = new PanelLog();
+    private JPanel global_container = new JPanel();
 
     private final static int width = 900;
     private final static int height = 500;
 
     public Client(AbstractController controller){
+
+        this.controller = controller;
 
         // Configurations générales de la fenêtre
         // -----------------------------------
@@ -32,11 +43,6 @@ public class Client extends JFrame implements Observer{
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        // -----------------------------------
-
-        // Creation des panels
-        // -----------------------------------
-        panel_peers = new PanelPeers(controller);
         // -----------------------------------
 
         initComposant();
@@ -83,10 +89,124 @@ public class Client extends JFrame implements Observer{
     }
 
     public void updateListPeers(List<String> list) {
-        panel_peers.setlistPeers(list);
+        panel_peers.setListPeers(list);
     }
     public void updateMapperMetadata(HashMap<String, Metadata> mapper) {
 
+    }
+
+    class RegisterButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            MyURL myURL = new MyURL();
+            String url = panel_peers.getJtfText();
+            panel_peers.setJtfText("");
+
+            if(myURL.getURL().equals(url))
+                panel_log.setTexte("You can't connect to yourself...");
+            else if (panel_peers.getListPeers().contains(url))
+                panel_log.setTexte("This peer is already registered !");
+            else {
+                try {
+                    rqt.registerPeers(url,myURL.getURL());
+
+                    panel_peers.addPeer(url);
+                    controller.updatelistPeers(panel_peers.getListPeers());
+                    panel_log.setTexte("Successful Register");
+
+                } catch (Exception e) {
+                    panel_log.setTexte("Error : Invalid URL ( Recall : IP:PORT )");
+                }
+            }
+
+            panel_result.changeCardLayout("INFOS");
+        }
+
+
+    }
+
+    class UnregisterButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            MyURL myURL = new MyURL();
+            String url = panel_peers.getSelectedPeer();
+
+            if(url.equals(""))
+                panel_log.setTexte("You have to select a peer");
+            else {
+                try {
+                    rqt.unregisterPeers(url,myURL.getURL());
+
+                    panel_peers.removePeer(url);
+                    controller.updatelistPeers(panel_peers.getListPeers());
+                    panel_log.setTexte("Successful Unregister");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            panel_result.changeCardLayout("INFOS");
+        }
+    }
+
+
+    class ListPeersButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            MyURL myURL = new MyURL();
+            String url = panel_peers.getSelectedPeer();
+
+            if(url.equals("")) {
+                panel_log.setTexte("You have to select a peer");
+                panel_result.changeCardLayout("INFOS");
+            }
+            else {
+                try {
+                    rqt.listPeers(url);
+
+                    panel_result.changeCardLayout("PEERS");
+                    panel_log.setTexte("Successful List Peers");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
+    }
+
+    class ListFilesButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            MyURL myURL = new MyURL();
+            String url = panel_peers.getSelectedPeer();
+
+            if(url.equals("")) {
+                panel_log.setTexte("You have to select a peer");
+                panel_result.changeCardLayout("INFOS");
+            }
+            else {
+                try {
+                    rqt.getMetadata(url);
+
+                    panel_result.changeCardLayout("FILES");
+                    panel_log.setTexte("Successful List Files");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    class ShareButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            int returnVal = fc.showOpenDialog(Client.this);
+
+            if(returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+                String name = file.getName();
+                long size = file.length();
+                long fileId = name.hashCode() * String.valueOf(size).hashCode();
+                if(fileId<0)
+                    fileId*=-1;
+            }
+        }
     }
 
 

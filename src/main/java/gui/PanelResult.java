@@ -9,16 +9,20 @@ public class PanelResult extends JPanel {
     private PanelResult_peers p_peers = new PanelResult_peers();
     private PanelResult_files p_files = new PanelResult_files();
 
+    private CardLayout cardLayout = new CardLayout();
+
     public PanelResult() {
 
         // Configurations globales du panel
         // ----------------------------------
-        this.setLayout(new CardLayout());
-        //this.add(p_infos);
-        //this.add(p_peers);
-        this.add(p_files);
-
+        this.setLayout(cardLayout);
+        this.add(p_infos,"INFOS");
+        this.add(p_peers,"PEERS");
+        this.add(p_files,"FILES");
         // ----------------------------------
+    }
 
+    public void changeCardLayout(String card) {
+        cardLayout.show(this, card);
     }
 }

@@ -4,6 +4,9 @@ import observer.Observable;
 import observer.Observer;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import tools.Metadata;
+import tools.Peer;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +16,7 @@ public abstract class AbstractServer implements Observable {
     protected List<String> listPeers = new ArrayList<>();
 
     /* The metadata list is a hashmap to be able to attribute keys to files and peers */
-    protected HashMap<String,Metadata> mapperMetadata = new HashMap<>();
+    protected HashMap<String, Metadata> mapperMetadata = new HashMap<>();
 
     private ArrayList<Observer> listObserver = new ArrayList<>();
 

@@ -8,7 +8,7 @@ import java.awt.*;
 public class PanelResult_infos extends JPanel {
 
     private MyURL url = new MyURL();
-    private ImagePanel image = new ImagePanel("gui.png");
+    private ImagePanel image = new ImagePanel("p2p.png");
 
     public PanelResult_infos() {
 

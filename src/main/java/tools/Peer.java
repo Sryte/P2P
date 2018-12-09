@@ -23,8 +23,6 @@ public class Peer {
 
     @Override
     public String toString() {
-        return "Peer{" +
-                "url='" + url + '\'' +
-                '}';
+        return url;
     }
 }

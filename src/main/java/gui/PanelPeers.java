@@ -85,9 +85,6 @@ public class PanelPeers extends JPanel {
     }
 
     public void refreshJSP() {
-        /*List<String> s_list = new ArrayList<>();
-        for(Peer p : listPeers)
-            s_list.add(p.getUrl());*/
         jList = new JList(listPeers.toArray());
         jsp.setViewportView(jList);
     }

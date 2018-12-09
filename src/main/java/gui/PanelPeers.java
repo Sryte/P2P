@@ -18,13 +18,14 @@ public class PanelPeers extends JPanel {
     private JButton listPeers_button = new JButton("List Peers");
     private JButton listFiles_button = new JButton("List Files");
 
-    public PanelPeers(Client.RegisterButtonListener registerButtonListener, Client.UnregisterButtonListener unregisterButtonListener, Client.ListPeersButtonListener listPeersButtonListener) {
+    public PanelPeers(Client.RegisterButtonListener registerButtonListener, Client.UnregisterButtonListener unregisterButtonListener, Client.ListPeersButtonListener listPeersButtonListener, Client.ListFilesButtonListener listFilesButtonListener) {
 
 
         // Button Listening
         register_button.addActionListener(registerButtonListener);
         unregister_button.addActionListener(unregisterButtonListener);
         listPeers_button.addActionListener(listPeersButtonListener);
+        listFiles_button.addActionListener(listFilesButtonListener);
 
         // Configurations globales du panel
         // ----------------------------------
@@ -103,7 +104,11 @@ public class PanelPeers extends JPanel {
     }
 
     public String getSelectedPeer() {
-        return listPeers.get(jList.getSelectedIndex());
+        int index = jList.getSelectedIndex();
+
+        if(index==-1)
+            return "";
+        return listPeers.get(index);
     }
 
     public void removePeer(String peer) {

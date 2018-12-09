@@ -21,7 +21,7 @@ public class Client extends JFrame implements Observer{
 
     private RequestsClient rqt = new RequestsClient();
     private JPanel center_container = new JPanel();
-    private PanelPeers panel_peers = new PanelPeers(new RegisterButtonListener(), new UnregisterButtonListener(), new ListPeersButtonListener());
+    private PanelPeers panel_peers = new PanelPeers(new RegisterButtonListener(), new UnregisterButtonListener(), new ListPeersButtonListener(), new ListFilesButtonListener());
     private PanelFiles panel_files = new PanelFiles();
     private PanelResult panel_result = new PanelResult();
     private PanelLog panel_log = new PanelLog();
@@ -97,29 +97,47 @@ public class Client extends JFrame implements Observer{
         public void actionPerformed(ActionEvent event) {
             MyURL myURL = new MyURL();
             String url = panel_peers.getJtfText();
-            if(myURL.getURL().equals(url) || panel_peers.getListPeers().contains(url))
+            panel_peers.setJtfText("");
+
+            if(myURL.getURL().equals(url)) {
+                panel_log.setTexte("You can't connect to yourself...");
                 return;
+            }
+
+            if(panel_peers.getListPeers().contains(url)) {
+                panel_log.setTexte("This peer is already registered !");
+                return;
+            }
+
             try {
                 rqt.registerPeers(url,myURL.getURL());
 
                 panel_peers.addPeer(url);
                 controller.updatelistPeers(panel_peers.getListPeers());
+                panel_log.setTexte("Successful Register");
 
             } catch (Exception e) {
-                e.printStackTrace();
+                panel_log.setTexte("Error : Invalid URL ( Recall : IP:PORT )");
             }
-            panel_peers.setJtfText("");
         }
     }
 
     class UnregisterButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             MyURL myURL = new MyURL();
+            String url = panel_peers.getSelectedPeer();
+
+            if(url.equals("")) {
+                panel_log.setTexte("You have to select a peer");
+                return;
+            }
+
             try {
-                String url = panel_peers.getSelectedPeer();
-                rqt.unregisterPeers(panel_peers.getSelectedPeer(),myURL.getURL());
+                rqt.unregisterPeers(url,myURL.getURL());
+
                 panel_peers.removePeer(url);
                 controller.updatelistPeers(panel_peers.getListPeers());
+                panel_log.setTexte("Successful Unregister");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -130,9 +148,39 @@ public class Client extends JFrame implements Observer{
     class ListPeersButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             MyURL myURL = new MyURL();
+            String url = panel_peers.getSelectedPeer();
+
+            if(url.equals("")) {
+                panel_log.setTexte("You have to select a peer");
+                return;
+            }
+
             try {
-                rqt.listPeers(panel_peers.getSelectedPeer());
+                rqt.listPeers(url);
+
                 panel_result.changeCardLayout("PEERS");
+                panel_log.setTexte("Successful List Peers");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    class ListFilesButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            MyURL myURL = new MyURL();
+            String url = panel_peers.getSelectedPeer();
+
+            if(url.equals("")) {
+                panel_log.setTexte("You have to select a peer");
+                return;
+            }
+
+            try {
+                rqt.getMetadata(url);
+
+                panel_result.changeCardLayout("FILES");
+                panel_log.setTexte("Successful List Files");
             } catch (Exception e) {
                 e.printStackTrace();
             }

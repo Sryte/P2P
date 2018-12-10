@@ -10,4 +10,8 @@ public class Content {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public Content(String content) {
+        this.content = content;
+    }
 }

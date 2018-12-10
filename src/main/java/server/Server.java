@@ -72,6 +72,7 @@ public class Server extends AbstractServer{
             return ; // code d'erreur
 
         mapperMetadata.remove(fileId);
+        notifyObserverMapperMetadata(mapperMetadata);
         FileDelete fileDelete = new FileDelete(fileId);
         if(!fileDelete.deleteFile())
             return ; // code d'erreur
@@ -95,13 +96,15 @@ public class Server extends AbstractServer{
      * If this the server of this peer contains this file, he will be able to send it
        * if this peer is not in the list of the available peers for the file we ask, he wont be able to send it */
     @RequestMapping(value = "/files/{fileId}", method = RequestMethod.GET)
-    public String getFile(@PathVariable String fileId) {
+    public Content getFile(@PathVariable String fileId) {
         if(!mapperMetadata.containsKey(fileId))
             return null;
 
         FileReading fileData = new FileReading(fileId);
 
-        return fileData.getData();
+        Content content = new Content(fileData.getData());
+
+        return content;
     }
 
     @RequestMapping(value = "/files/{fileId}", method = RequestMethod.POST)

@@ -27,7 +27,7 @@ public abstract class AbstractServer implements Observable {
     public abstract HashMap<String,Metadata> getMetadata();
     public abstract void deleteFile(@PathVariable String fileId);
     public abstract void uploadMetadata (@RequestBody Metadata fileMeta);
-    public abstract String getFile(@PathVariable String fileId);
+    public abstract Content getFile(@PathVariable String fileId);
     public abstract void uploadFile(@PathVariable String fileId, @RequestBody Content content);
 
     public void addObserver(Observer obs) {

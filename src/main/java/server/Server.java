@@ -108,7 +108,7 @@ public class Server extends AbstractServer{
     public void uploadFile(@PathVariable String fileId, @RequestBody Content content) {
         if(!mapperMetadata.containsKey(fileId))
             return ; // code d'erreur
-        StringWriter fileWrite = new StringWriter(content.getData(),fileId);
+        StringWriter fileWrite = new StringWriter(content.getContent(),fileId);
         try {
             fileWrite.writeFile();
         }

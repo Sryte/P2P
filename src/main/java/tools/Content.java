@@ -1,18 +1,18 @@
 package tools;
 
 public class Content {
-    private String data;
+    private String content;
 
-    public String getData() {
-        return data;
+    public String getContent() {
+        return content;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setContent(String data) {
+        this.content = data;
     }
 
     public Content(String data) {
-        this.data = data;
+        this.content = data;
     }
 
 

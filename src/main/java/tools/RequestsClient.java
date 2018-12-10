@@ -112,25 +112,8 @@ public class RequestsClient {
         br.close();
     }
 
-    public HashMap<String, Metadata>/*void*/ getMetadata(String url) /*throws Exception*/ {
-        /*DefaultHttpClient httpClient = new DefaultHttpClient();
+    public HashMap<String, Metadata> getMetadata(String url) {
 
-        url = "http://"+url+"/files";
-        HttpGet getMeta = new HttpGet(url);
-
-        HttpResponse response = httpClient.execute(getMeta);
-
-        BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
-
-        String output;
-        System.out.println("Output from Server .... \n");
-        while ((output = br.readLine()) != null) {
-            System.out.println(output);
-        }
-
-        System.out.println(response.getStatusLine().getStatusCode());
-
-        br.close();*/
 
         RestTemplate restTemplate = new RestTemplate();
         HashMap<String, Metadata> metadata = new HashMap<>();
@@ -140,6 +123,7 @@ public class RequestsClient {
             metadata = new ObjectMapper().readValue(result, new TypeReference<HashMap<String, Metadata>>(){});
         } catch (IOException e){
             e.printStackTrace();
+            return null;
         }
 
         System.out.println(metadata);
@@ -152,10 +136,12 @@ public class RequestsClient {
         List<Peer> peers = new ArrayList<>();
         String result = restTemplate.getForObject("http://" +url + "/peers", String.class);
 
+
         try {
             peers = new ObjectMapper().readValue(result, new TypeReference<List<Peer>>(){});
         } catch (IOException e){
             e.printStackTrace();
+            return null;
         }
 
         System.out.println(peers.get(0).getUrl());

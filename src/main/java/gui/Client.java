@@ -197,7 +197,10 @@ public class Client extends JFrame implements Observer{
             }
             else {
                 try {
-                    rqt.getMetadata(peer.getUrl());
+                    HashMap<String, Metadata> mapperMetadata = rqt.getMetadata(peer.getUrl());
+
+                    panel_files.setMapperMetadata(mapperMetadata);
+                    panel_files.refreshTableau();
 
                     panel_result.changeCardLayout("FILES");
                     panel_log.setTexte("Successful List Files");

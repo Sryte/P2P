@@ -4,6 +4,7 @@ import tools.Metadata;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,8 +14,7 @@ public class PanelFiles extends JPanel {
     private HashMap<String, Metadata> mapperMetadata = new HashMap<>();
 
     private JTable tableau;
-    private List<String> list_files = new ArrayList<>();
-    private JTextField jtf = new JTextField();
+    JScrollPane jsp = new JScrollPane();
     private JButton share_button = new JButton("Share a new file");
     private JButton upload_button = new JButton("Upload");
     private JButton delete_button = new JButton("Delete");
@@ -44,11 +44,19 @@ public class PanelFiles extends JPanel {
         center.setLayout( new FlowLayout(FlowLayout.CENTER, 30, 10) );
 
         String title[] = {"FileId","Size", "FileName"};
-        Object[][] data = {{"jhjdvuhuhxvuhisjcbisvbudsdv","25","f1.txt"},{"ksdcn","25","f2.txt"}};
+
+        String[][] data = new String[mapperMetadata.size()][3];
+        int i = 0;
+        for(String key : mapperMetadata.keySet()) {
+            data[i][0] = mapperMetadata.get(key).getFileId();
+            data[i][1] = String.valueOf(mapperMetadata.get(key).getSize());
+            data[i][2] = mapperMetadata.get(key).getName();
+            i++;
+        }
 
         tableau = new JTable(data,title);
 
-        JScrollPane jsp = new JScrollPane(tableau);
+        jsp.add(tableau);
         jsp.setPreferredSize(new Dimension(250,140));
         center.add(jsp);
 
@@ -68,5 +76,25 @@ public class PanelFiles extends JPanel {
         this.add(south, BorderLayout.SOUTH);
         // ---------------------------------------------
 
+    }
+
+    public void refreshTableau() {
+        String title[] = {"FileId","Size", "FileName"};
+
+        String[][] data = new String[mapperMetadata.size()][3];
+        int i = 0;
+        for(String key : mapperMetadata.keySet()) {
+            data[i][0] = mapperMetadata.get(key).getFileId();
+            data[i][1] = String.valueOf(mapperMetadata.get(key).getSize());
+            data[i][2] = mapperMetadata.get(key).getName();
+            i++;
+        }
+
+        tableau = new JTable(data,title);
+        jsp.setViewportView(tableau);
+    }
+
+    public void setMapperMetadata(HashMap<String, Metadata> mapperMetadata) {
+        this.mapperMetadata = mapperMetadata;
     }
 }

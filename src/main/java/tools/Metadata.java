@@ -6,6 +6,7 @@ package tools;
 public class Metadata {
 
     private String fileId;
+
     private long size;
     private String name;
 
@@ -33,13 +34,15 @@ public class Metadata {
         this.name = name;
     }
 
+    public Metadata(String fileId, long size, String name) {
+        this.fileId = fileId;
+        this.size = size;
+        this.name = name;
+    }
+
     @Override
     public String toString() {
-        return "Metadata{" +
-                "fileId='" + fileId + '\'' +
-                ", size='" + size + '\'' +
-                ", name='" + name + '\'' +
-                '}';
+        return fileId + "," + String.valueOf(size) + "," + name ;
     }
 
 }

@@ -19,10 +19,12 @@ public class PanelFiles extends JPanel {
     private JButton upload_button = new JButton("Upload");
     private JButton delete_button = new JButton("Delete");
 
-    public PanelFiles(Client.ShareButtonListener shareButtonListener) {
+    public PanelFiles(Client.ShareButtonListener shareButtonListener, Client.UploadButtonListenner uploadButtonListenner, Client.DeleteButtonListenner deleteButtonListenner) {
 
         // Button Listening
         share_button.addActionListener(shareButtonListener);
+        upload_button.addActionListener(uploadButtonListenner);
+        delete_button.addActionListener(deleteButtonListenner);
 
         // Configurations globales du panel
         // ----------------------------------
@@ -108,5 +110,9 @@ public class PanelFiles extends JPanel {
             return null;
         String key = tableau.getModel().getValueAt(index,0).toString();
         return mapperMetadata.get(key);
+    }
+
+    public void removeMetadata(String key) {
+        mapperMetadata.remove(key);
     }
 }

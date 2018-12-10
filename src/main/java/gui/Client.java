@@ -22,7 +22,7 @@ public class Client extends JFrame implements Observer{
     private RequestsClient rqt = new RequestsClient();
     private JPanel center_container = new JPanel();
     private PanelPeers panel_peers = new PanelPeers(new RegisterButtonListener(), new UnregisterButtonListener(), new ListPeersButtonListener(), new ListFilesButtonListener());
-    private PanelFiles panel_files = new PanelFiles(new ShareButtonListener());
+    private PanelFiles panel_files = new PanelFiles(new ShareButtonListener(), new UploadButtonListenner(), new DeleteButtonListenner());
     private PanelResult_infos panelResultInfos = new PanelResult_infos();
     private PanelResult_peers panelResultPeers = new PanelResult_peers(new RegisterButtonListener());
     private PanelResult_files panelResultFiles = new PanelResult_files();
@@ -239,27 +239,45 @@ public class Client extends JFrame implements Observer{
         }
     }
 
-    class uploadButtonListenner implements ActionListener {
+    class UploadButtonListenner implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             Metadata metadata = panel_files.getSelectedFile();
-            Peer peer = panel_peers.getSelectedPeer();
-
-            if(peer == null)
-                panel_log.setTexte("You have to select a peer");
+            List<Peer> listPeer = panel_peers.getListPeers();
 
             if(metadata == null)
                 panel_log.setTexte("You have to select a file");
+            else if(listPeer == null)
+                panel_log.setTexte("There is no peer connected");
+            else {
+                try {
+                    for(Peer p : listPeer) {
+                        rqt.uploadFilesMetadata(p.getUrl(),metadata);
+                        rqt.uploadFilesData(p.getUrl(),metadata.getFileId());
+                    }
 
-
-            try {
-                rqt.uploadFilesMetadata(peer.getUrl(),metadata);
-                rqt.uploadFilesData(peer.getUrl(),metadata.getFileId());
-                panel_log.setTexte("Successful Upload");
-            } catch (Exception e) {
-                e.printStackTrace();
+                    panel_log.setTexte("Successful Upload");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-
             panel_result.changeCardLayout("INFOS");
+        }
+    }
+
+    class DeleteButtonListenner implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            Metadata metadata = panel_files.getSelectedFile();
+            if(metadata == null)
+                panel_log.setTexte("You have to select a file");
+            else {
+                FileDelete fd = new FileDelete(metadata.getFileId());
+                if(fd.deleteFile())
+                    panel_log.setTexte("File correctly suppressed");
+                else
+                    panel_log.setTexte("File is unfortunately not suppressed...");
+                panel_files.removeMetadata(metadata.getFileId());
+                panel_files.refreshTableau();
+            }
         }
     }
 }

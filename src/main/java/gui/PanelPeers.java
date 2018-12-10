@@ -117,6 +117,4 @@ public class PanelPeers extends JPanel {
         return register_button;
     }
 
-
-
 }

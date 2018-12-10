@@ -92,7 +92,8 @@ public class Client extends JFrame implements Observer{
         panel_peers.refreshJSP();
     }
     public void updateMapperMetadata(HashMap<String, Metadata> mapper) {
-
+        panel_files.setMapperMetadata(mapper);
+        panel_files.refreshTableau();
     }
 
     class RegisterButtonListener implements ActionListener {

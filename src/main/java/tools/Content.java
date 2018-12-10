@@ -7,13 +7,7 @@ public class Content {
         return content;
     }
 
-    public void setContent(String data) {
-        this.content = data;
+    public void setContent(String content) {
+        this.content = content;
     }
-
-    public Content(String data) {
-        this.content = data;
-    }
-
-
 }

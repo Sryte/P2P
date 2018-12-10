@@ -4,7 +4,7 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
-import java.util.Base64;
+import org.apache.commons.codec.binary.Base64;
 
 public class StringWriter {
 
@@ -17,7 +17,7 @@ public class StringWriter {
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(path));
 
-        byte[] decodedBytes = Base64.getDecoder().decode(data.getBytes());
+        byte[] decodedBytes = Base64.decodeBase64(data.getBytes());
 
         String fileContent = new String(decodedBytes, "UTF-8");
         writer.write(fileContent);

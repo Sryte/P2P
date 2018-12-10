@@ -3,7 +3,7 @@ package tools;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Base64;
+import org.apache.commons.codec.binary.Base64;
 
 public class FileReading {
 
@@ -28,9 +28,9 @@ public class FileReading {
                 fileContent+=reader;
             }
 
-            content = Base64.getEncoder().encodeToString(fileContent.getBytes());
+            content = Base64.encodeBase64String(fileContent.getBytes());
             System.out.println(content);
-            byte[] decodedBytes = Base64.getDecoder().decode(content.getBytes());
+            byte[] decodedBytes = Base64.decodeBase64(content.getBytes());
             System.out.println(new String(decodedBytes,"UTF-8") + "\n");
 
 

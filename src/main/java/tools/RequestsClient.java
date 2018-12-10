@@ -22,23 +22,13 @@ public class RequestsClient {
     public void uploadFilesData(String url, String fileId) throws Exception {
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
-        FileReader fr = new FileReader(System.getProperty("user.dir")+"\\share\\" + fileId);
-        BufferedReader br = new BufferedReader(fr);
+        FileReading fr = new FileReading("share/"+fileId);
 
-        String reader;
-        String fileContent = "";
-
-        while ((reader = br.readLine()) != null) {
-            fileContent+=reader;
-        }
-        //System.out.println(fileContent);
-        fileContent = Base64.getEncoder().encodeToString(fileContent.getBytes());
-        System.out.println(fileContent);
 
         url = "http://"+url+"/files/"+fileId;
         HttpPost postFileData = new HttpPost(url);
 
-        String payload = "{\"content\":\""+fileContent+"\"}";
+        String payload = "{\"content\":\""+fr.getData()+"\"}";
         StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
 
         postFileData.setEntity(entity);
@@ -47,8 +37,6 @@ public class RequestsClient {
 
         System.out.println(response.getStatusLine().getStatusCode());
 
-        br.close();
-        fr.close();
     }
 
     public void uploadFilesMetadata(String url, Metadata metadata) throws Exception {
@@ -57,13 +45,6 @@ public class RequestsClient {
         url = "http://"+url+"/files";
         HttpPost postFileMetadata = new HttpPost(url);
 
-        /*
-        String path = System.getProperty("user.dir")+"\\share\\" + name;
-        File file = new File(path);
-        long size = file.length();
-        String size2 = new String(String.valueOf(size));
-
-        long fileId = name.hashCode() * size2.hashCode();*/
 
         String payload = "{\"fileId\":\""+metadata.getFileId()+"\",\"size\":"+metadata.getSize()+",\"name\":\""+metadata.getName()+"\"}";
         StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);

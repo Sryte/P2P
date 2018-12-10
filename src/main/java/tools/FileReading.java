@@ -13,11 +13,7 @@ public class FileReading {
         return data;
     }
 
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public static String encodeBase64(String filePath)
+    private static String encodeBase64(String filePath)
     {
             String content = "";
             try

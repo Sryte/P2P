@@ -19,7 +19,7 @@ import java.util.List;
 public class RequestsClient {
 
     public void uploadFilesData(String url, String fileId) throws Exception {
-        DefaultHttpClient httpClient = new DefaultHttpClient();
+       /* DefaultHttpClient httpClient = new DefaultHttpClient();
 
         FileReading fr = new FileReading(fileId);
 
@@ -34,7 +34,20 @@ public class RequestsClient {
 
         HttpResponse response = httpClient.execute(postFileData);
 
-        System.out.println(response.getStatusLine().getStatusCode());
+        System.out.println(response.getStatusLine().getStatusCode());*/
+
+        RestTemplate restTemplate = new RestTemplate();
+        String content = new String();
+        String result = restTemplate.getForObject("http://" +url + "/files/"+fileId, String.class);
+
+
+        try {
+            content = new ObjectMapper().readValue(result, new TypeReference<String>(){});
+            FileReading fr = new FileReading(fileId);
+        } catch (IOException e){
+            e.printStackTrace();
+            return ;
+        }
 
     }
 

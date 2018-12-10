@@ -13,7 +13,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class RequestsClient {
     public void uploadFilesData(String url, String fileId) throws Exception {
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
-        FileReading fr = new FileReading("share/"+fileId);
+        FileReading fr = new FileReading(fileId);
 
 
         url = "http://"+url+"/files/"+fileId;

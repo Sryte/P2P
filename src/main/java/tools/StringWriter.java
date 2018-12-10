@@ -19,7 +19,7 @@ public class StringWriter {
 
         byte[] decodedBytes = Base64.decodeBase64(data.getBytes());
 
-        String fileContent = new String(decodedBytes);
+        String fileContent = new String(decodedBytes, "UTF-8");
         writer.write(fileContent);
 
         writer.close();

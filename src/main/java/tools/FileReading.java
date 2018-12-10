@@ -30,6 +30,9 @@ public class FileReading {
 
             content = Base64.getEncoder().encodeToString(fileContent.getBytes());
             System.out.println(content);
+            //byte[] decodeBytes = Base64.getDecoder().decode(content.getBytes());
+            //System.out.println(new String(decodeBytes,"UTF-8") + "\n");
+
 
         }
         catch (IOException e)

@@ -3,16 +3,13 @@ package gui;
 
 import controller.AbstractController;
 import observer.Observer;
-import tools.Metadata;
-import tools.MyURL;
-import tools.Peer;
-import tools.RequestsClient;
+import tools.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 
@@ -219,9 +216,27 @@ public class Client extends JFrame implements Observer{
                 File file = fc.getSelectedFile();
                 String name = file.getName();
                 long size = file.length();
-                long fileId = name.hashCode() * String.valueOf(size).hashCode();
-                if(fileId<0)
-                    fileId*=-1;
+                long hash = name.hashCode() * String.valueOf(size).hashCode();
+
+                if(hash<0)
+                    hash*=-1;
+
+                String fileId = String.valueOf(hash);
+
+                File dest = new File("share/"+fileId);
+
+                CopyFile cp = new CopyFile();
+                try {
+                    cp.copyFileUsingStream(file, dest);
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                panel_files.addMetadata(new Metadata(fileId,size,name));
+                panel_files.refreshTableau();
+
             }
         }
     }

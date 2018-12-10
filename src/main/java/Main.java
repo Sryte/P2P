@@ -7,10 +7,25 @@ import server.AbstractServer;
 import server.Server;
 
 import java.awt.*;
+import java.io.File;
 
 
 public class Main {
     public static void main(String[] args){
+
+        File share = new File("share");
+        if(share.exists()) {
+            String[] entries = share.list();
+            File currentFile;
+            for(String s : entries)
+            {
+                currentFile = new File(share.getPath(),s);
+                currentFile.delete();
+            }
+
+        }
+        else
+            share.mkdir();
 
         ConfigurableApplicationContext ctx = new SpringApplicationBuilder(Server.class).headless(false).run(args);
 

@@ -11,7 +11,8 @@ public class StringWriter {
     private String fileName;
 
     public void writeFile() throws IOException {
-        String path = System.getProperty("user.dir")+"\\share\\" + fileName;
+        //String path = System.getProperty("user.dir")+"\\share\\" + fileName;
+        String path = "share/" + fileName;
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(path));
 

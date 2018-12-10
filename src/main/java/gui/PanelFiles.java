@@ -97,4 +97,8 @@ public class PanelFiles extends JPanel {
     public void setMapperMetadata(HashMap<String, Metadata> mapperMetadata) {
         this.mapperMetadata = mapperMetadata;
     }
+
+    public void addMetadata(Metadata metadata) {
+        mapperMetadata.put(metadata.getFileId(), metadata);
+    }
 }

@@ -102,7 +102,8 @@ public class Server extends AbstractServer{
 
         FileReading fileData = new FileReading(fileId);
 
-        Content content = new Content(fileData.getData());
+        Content content = new Content();
+        content.setContent(fileData.getData());
 
         return content;
     }

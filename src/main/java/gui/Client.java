@@ -226,15 +226,13 @@ public class Client extends JFrame implements Observer{
                 CopyFile cp = new CopyFile();
                 try {
                     cp.copyFileUsingStream(file, dest);
+                    panel_files.addMetadata(new Metadata(fileId,size,name));
+                    panel_files.refreshTableau();
+                    controller.updatemapperMetadata(panel_files.getMapperMetadata());
                 }
                 catch (IOException e) {
                     e.printStackTrace();
                 }
-
-
-                panel_files.addMetadata(new Metadata(fileId,size,name));
-                panel_files.refreshTableau();
-
             }
         }
     }
@@ -277,6 +275,7 @@ public class Client extends JFrame implements Observer{
                     panel_log.setTexte("File is unfortunately not suppressed...");
                 panel_files.removeMetadata(metadata.getFileId());
                 panel_files.refreshTableau();
+                controller.updatemapperMetadata(panel_files.getMapperMetadata());
             }
         }
     }

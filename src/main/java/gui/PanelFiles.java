@@ -115,4 +115,8 @@ public class PanelFiles extends JPanel {
     public void removeMetadata(String key) {
         mapperMetadata.remove(key);
     }
+
+    public HashMap<String, Metadata> getMapperMetadata() {
+        return mapperMetadata;
+    }
 }

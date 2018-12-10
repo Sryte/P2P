@@ -19,10 +19,10 @@ import java.util.List;
 
 public class RequestsClient {
 
-    public void uploadFilesData(String url, String name, String fileId) throws Exception {
+    public void uploadFilesData(String url, String fileId) throws Exception {
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
-        FileReader fr = new FileReader(System.getProperty("user.dir")+"\\share\\" + name);
+        FileReader fr = new FileReader(System.getProperty("user.dir")+"\\share\\" + fileId);
         BufferedReader br = new BufferedReader(fr);
 
         String reader;
@@ -51,20 +51,21 @@ public class RequestsClient {
         fr.close();
     }
 
-    public void uploadFilesMetadata(String url, String name) throws Exception {
+    public void uploadFilesMetadata(String url, Metadata metadata) throws Exception {
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
         url = "http://"+url+"/files";
         HttpPost postFileMetadata = new HttpPost(url);
 
+        /*
         String path = System.getProperty("user.dir")+"\\share\\" + name;
         File file = new File(path);
         long size = file.length();
         String size2 = new String(String.valueOf(size));
 
-        long fileId = name.hashCode() * size2.hashCode();
+        long fileId = name.hashCode() * size2.hashCode();*/
 
-        String payload = "{\"fileId\":\""+fileId+"\",\"size\":\""+size+"\",\"name\":\""+name+"\"}";
+        String payload = "{\"fileId\":\""+metadata.getFileId()+"\",\"size\":"+metadata.getSize()+",\"name\":\""+metadata.getName()+"\"}";
         StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
 
         postFileMetadata.setEntity(entity);

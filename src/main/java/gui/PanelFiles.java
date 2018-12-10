@@ -101,4 +101,12 @@ public class PanelFiles extends JPanel {
     public void addMetadata(Metadata metadata) {
         mapperMetadata.put(metadata.getFileId(), metadata);
     }
+
+    public Metadata getSelectedFile() {
+        int index = tableau.getSelectedRow();
+        if(index==-1)
+            return null;
+        String key = tableau.getModel().getValueAt(index,0).toString();
+        return mapperMetadata.get(key);
+    }
 }

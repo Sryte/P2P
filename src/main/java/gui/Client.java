@@ -158,7 +158,6 @@ public class Client extends JFrame implements Observer{
 
     class ListPeersButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            MyURL myURL = new MyURL();
             Peer peer = panel_peers.getSelectedPeer();
 
             if(peer == null) {
@@ -185,7 +184,6 @@ public class Client extends JFrame implements Observer{
 
     class ListFilesButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            MyURL myURL = new MyURL();
             Peer peer = panel_peers.getSelectedPeer();
 
             if(peer == null) {
@@ -241,5 +239,27 @@ public class Client extends JFrame implements Observer{
         }
     }
 
+    class uploadButtonListenner implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            Metadata metadata = panel_files.getSelectedFile();
+            Peer peer = panel_peers.getSelectedPeer();
 
+            if(peer == null)
+                panel_log.setTexte("You have to select a peer");
+
+            if(metadata == null)
+                panel_log.setTexte("You have to select a file");
+
+
+            try {
+                rqt.uploadFilesMetadata(peer.getUrl(),metadata);
+                rqt.uploadFilesData(peer.getUrl(),metadata.getFileId());
+                panel_log.setTexte("Successful Upload");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            panel_result.changeCardLayout("INFOS");
+        }
+    }
 }

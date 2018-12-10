@@ -105,10 +105,10 @@ public class Server extends AbstractServer{
     }
 
     @RequestMapping(value = "/files/{fileId}", method = RequestMethod.POST)
-    public void uploadFile(@PathVariable String fileId, @RequestBody String content) {
+    public void uploadFile(@PathVariable String fileId, @RequestBody Content content) {
         if(!mapperMetadata.containsKey(fileId))
             return ; // code d'erreur
-        StringWriter fileWrite = new StringWriter(content,fileId);
+        StringWriter fileWrite = new StringWriter(content.getData(),fileId);
         try {
             fileWrite.writeFile();
         }

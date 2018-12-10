@@ -4,6 +4,7 @@ import observer.Observable;
 import observer.Observer;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import tools.Content;
 import tools.Metadata;
 import tools.Peer;
 
@@ -27,7 +28,7 @@ public abstract class AbstractServer implements Observable {
     public abstract void deleteFile(@PathVariable String fileId);
     public abstract void uploadMetadata (@RequestBody Metadata fileMeta);
     public abstract String getFile(@PathVariable String fileId);
-    public abstract void uploadFile(@PathVariable String fileId, @RequestBody String content);
+    public abstract void uploadFile(@PathVariable String fileId, @RequestBody Content content);
 
     public void addObserver(Observer obs) {
         this.listObserver.add(obs);

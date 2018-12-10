@@ -1,4 +1,4 @@
-package server;
+package tools;
 
 /* A fileID that designate a specific file is available in 0 to n peers
  * that's why we use a list of peers for a specific file id */
@@ -6,6 +6,7 @@ package server;
 public class Metadata {
 
     private String fileId;
+
     private long size;
     private String name;
 
@@ -33,6 +34,15 @@ public class Metadata {
         this.name = name;
     }
 
+    public Metadata(String fileId, long size, String name) {
+        this.fileId = fileId;
+        this.size = size;
+        this.name = name;
+    }
 
+    @Override
+    public String toString() {
+        return fileId + "," + String.valueOf(size) + "," + name ;
+    }
 
 }

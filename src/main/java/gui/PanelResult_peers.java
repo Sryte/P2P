@@ -1,5 +1,7 @@
 package gui;
 
+import tools.Peer;
+
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
@@ -9,10 +11,16 @@ import java.util.List;
 
 public class PanelResult_peers extends JPanel {
 
-    private List<String> list_peers = new ArrayList<>();
+    private List<Peer> listPeers = new ArrayList<>();
     private JButton register_button = new JButton("Register");
 
-    public PanelResult_peers() {
+    private JList jList;
+    JScrollPane jsp = new JScrollPane();
+
+    public PanelResult_peers(Client.RegisterButtonListener registerButtonListener) {
+
+        // Button Listening
+        register_button.addActionListener(registerButtonListener);
 
         // Configurations globales du panel
         // ----------------------------------
@@ -43,12 +51,8 @@ public class PanelResult_peers extends JPanel {
         JPanel p_tableau = new JPanel();
         p_tableau.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-        // test
-        for(int i = 0 ; i<100 ; i++ )
-            list_peers.add("192.168.10.4:8080");
-
-        JList list = new JList(list_peers.toArray());
-        JScrollPane jsp = new JScrollPane(list);
+        jList = new JList(listPeers.toArray());
+        jsp.add(jList);
         jsp.setPreferredSize(new Dimension(140,140));
         p_tableau.add(jsp);
         p_list.add(p_tableau, BorderLayout.CENTER);
@@ -69,6 +73,22 @@ public class PanelResult_peers extends JPanel {
         center.add(p_actions);
         this.add(center, BorderLayout.CENTER);
         // ---------------------------------------------
+    }
 
+    public void setListPeers(List<Peer> list_peers) {
+        this.listPeers = list_peers;
+    }
+
+    public void refreshJSP() {
+        jList = new JList(listPeers.toArray());
+        jsp.setViewportView(jList);
+    }
+
+    public Peer getSelectedPeer() {
+        int index = jList.getSelectedIndex();
+
+        if(index==-1)
+            return null;
+        return listPeers.get(index);
     }
 }

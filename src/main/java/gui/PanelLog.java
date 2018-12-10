@@ -7,7 +7,7 @@ import java.awt.*;
 
 public class PanelLog extends JPanel {
 
-    private String message = new String();
+    JLabel texte = new JLabel("");
 
     public PanelLog() {
 
@@ -28,11 +28,13 @@ public class PanelLog extends JPanel {
 
         // Panel center
         // ----------------------------------
-        message = "Ceci est un message de test";
-        JLabel texte = new JLabel(message);
         texte.setHorizontalAlignment(JLabel.CENTER);
         texte.setVerticalAlignment(JLabel.CENTER);
         this.add(texte, BorderLayout.CENTER);
         // ----------------------------------
+    }
+
+    public void setTexte(String texte) {
+        this.texte.setText(texte);
     }
 }

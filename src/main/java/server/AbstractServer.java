@@ -4,27 +4,31 @@ import observer.Observable;
 import observer.Observer;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import tools.Content;
+import tools.Metadata;
+import tools.Peer;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public abstract class AbstractServer implements Observable {
 
-    protected List<String> listPeers = new ArrayList<>();
+    protected List<Peer> listPeers = new ArrayList<>();
 
     /* The metadata list is a hashmap to be able to attribute keys to files and peers */
-    protected HashMap<String,Metadata> mapperMetadata = new HashMap<>();
+    protected HashMap<String, Metadata> mapperMetadata = new HashMap<>();
 
     private ArrayList<Observer> listObserver = new ArrayList<>();
 
     public abstract void register(@RequestBody Peer peer);
-    public abstract List<String> getListPeers();
+    public abstract List<Peer> getListPeers();
     public abstract void unregister(@PathVariable String peerId);
     public abstract HashMap<String,Metadata> getMetadata();
     public abstract void deleteFile(@PathVariable String fileId);
     public abstract void uploadMetadata (@RequestBody Metadata fileMeta);
     public abstract String getFile(@PathVariable String fileId);
-    public abstract void uploadFile(@PathVariable String fileId, @RequestBody String content);
+    public abstract void uploadFile(@PathVariable String fileId, @RequestBody Content content);
 
     public void addObserver(Observer obs) {
         this.listObserver.add(obs);
@@ -34,7 +38,7 @@ public abstract class AbstractServer implements Observable {
         listObserver = new ArrayList<Observer>();
     }
 
-    public void notifyObserverListPeers(List<String> list) {
+    public void notifyObserverListPeers(List<Peer> list) {
         for(Observer obs : listObserver)
             obs.updateListPeers(list);
     }
@@ -43,7 +47,7 @@ public abstract class AbstractServer implements Observable {
             obs.updateMapperMetadata(mapper);
     }
 
-    public void setListPeers(List<String> listPeers) {
+    public void setListPeers(List<Peer> listPeers) {
         this.listPeers = listPeers;
     }
 

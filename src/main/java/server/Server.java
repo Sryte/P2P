@@ -1,31 +1,32 @@
 package server;
 
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
-import tools.FileDelete;
-import tools.FileReading;
-import tools.StringWriter;
+import tools.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@SpringBootApplication
 @RestController
 public class Server extends AbstractServer{
 
     /* adding a specific peer to the list of peers of the network */
     @RequestMapping(value = "/peers", method = RequestMethod.POST)
     public void register(@RequestBody Peer peer) {
-        if(!listPeers.contains(peer.getURL()))
-        {
-            listPeers.add(peer.getURL());
-            notifyObserverListPeers(this.listPeers);
-        }
+
+        for(Peer p : listPeers)
+            if(p.getUrl().equals(peer.getUrl()))
+                return;
+
+        listPeers.add(new Peer(peer.getUrl()));
+        notifyObserverListPeers(this.listPeers);
     }
 
     /* Obtain the list of available peers in the network and checking if the list is empty*/
     @RequestMapping(value = "/peers", method = RequestMethod.GET)
-    public List<String> getListPeers()
+    public List<Peer> getListPeers()
     {
         if (listPeers.isEmpty())
             return null;
@@ -36,12 +37,24 @@ public class Server extends AbstractServer{
     /* Delete a specific peer in the list of the available peers */
     @RequestMapping(value = "/peers/{peerId}", method = RequestMethod.DELETE)
     public void unregister(@PathVariable String peerId) {
-        listPeers.remove(peerId);
+
+        int index = 0;
+        for(Peer p : listPeers) {
+            if(p.getUrl().equals(peerId)) {
+                break;
+            }
+            index++;
+        }
+        if(index<=listPeers.size()) {
+            listPeers.remove(index);
+            notifyObserverListPeers(this.listPeers);
+        }
+
     }
 
     /* Getting the metadata list and checking if it's empty */
     @RequestMapping(value = "/files", method = RequestMethod.GET)
-    public HashMap<String,Metadata> getMetadata()
+    public HashMap<String, Metadata> getMetadata()
     {
         if (mapperMetadata.isEmpty())
         {
@@ -92,10 +105,10 @@ public class Server extends AbstractServer{
     }
 
     @RequestMapping(value = "/files/{fileId}", method = RequestMethod.POST)
-    public void uploadFile(@PathVariable String fileId, @RequestBody String content) {
+    public void uploadFile(@PathVariable String fileId, @RequestBody Content content) {
         if(!mapperMetadata.containsKey(fileId))
             return ; // code d'erreur
-        StringWriter fileWrite = new StringWriter(content,fileId);
+        StringWriter fileWrite = new StringWriter(content.getContent(),fileId);
         try {
             fileWrite.writeFile();
         }

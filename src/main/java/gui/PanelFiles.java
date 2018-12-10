@@ -1,19 +1,30 @@
 package gui;
 
+import tools.Metadata;
+
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class PanelFiles extends JPanel {
 
-    private List<String> list_files = new ArrayList<>();
-    private JTextField jtf = new JTextField();
-    private JButton share_button = new JButton("Share");
+    private HashMap<String, Metadata> mapperMetadata = new HashMap<>();
+
+    private JTable tableau;
+    JScrollPane jsp = new JScrollPane();
+    private JButton share_button = new JButton("Share a new file");
     private JButton upload_button = new JButton("Upload");
     private JButton delete_button = new JButton("Delete");
 
-    public PanelFiles() {
+    public PanelFiles(Client.ShareButtonListener shareButtonListener, Client.UploadButtonListenner uploadButtonListenner, Client.DeleteButtonListenner deleteButtonListenner) {
+
+        // Button Listening
+        share_button.addActionListener(shareButtonListener);
+        upload_button.addActionListener(uploadButtonListenner);
+        delete_button.addActionListener(deleteButtonListenner);
 
         // Configurations globales du panel
         // ----------------------------------
@@ -34,14 +45,21 @@ public class PanelFiles extends JPanel {
         JPanel center = new JPanel();
         center.setLayout( new FlowLayout(FlowLayout.CENTER, 30, 10) );
 
-        // test
-        for(int i = 0 ; i<100 ; i++ )
-            list_files.add("f1.txt");
+        String title[] = {"FileId","Size", "FileName"};
 
-        JList list = new JList(list_files.toArray());
+        String[][] data = new String[mapperMetadata.size()][3];
+        int i = 0;
+        for(String key : mapperMetadata.keySet()) {
+            data[i][0] = mapperMetadata.get(key).getFileId();
+            data[i][1] = String.valueOf(mapperMetadata.get(key).getSize());
+            data[i][2] = mapperMetadata.get(key).getName();
+            i++;
+        }
 
-        JScrollPane jsp = new JScrollPane(list);
-        jsp.setPreferredSize(new Dimension(140,140));
+        tableau = new JTable(data,title);
+
+        jsp.add(tableau);
+        jsp.setPreferredSize(new Dimension(250,140));
         center.add(jsp);
 
         // ajout des boutons
@@ -55,13 +73,50 @@ public class PanelFiles extends JPanel {
         // ---------------------------------------------
         JPanel south = new JPanel();
 
-        south.add(new JLabel("Share a new File : "));
-        jtf.setPreferredSize(new Dimension(120,20));
-        south.add(jtf);
         south.add(share_button);
 
         this.add(south, BorderLayout.SOUTH);
         // ---------------------------------------------
 
+    }
+
+    public void refreshTableau() {
+        String title[] = {"FileId","Size", "FileName"};
+
+        String[][] data = new String[mapperMetadata.size()][3];
+        int i = 0;
+        for(String key : mapperMetadata.keySet()) {
+            data[i][0] = mapperMetadata.get(key).getFileId();
+            data[i][1] = String.valueOf(mapperMetadata.get(key).getSize());
+            data[i][2] = mapperMetadata.get(key).getName();
+            i++;
+        }
+
+        tableau = new JTable(data,title);
+        jsp.setViewportView(tableau);
+    }
+
+    public void setMapperMetadata(HashMap<String, Metadata> mapperMetadata) {
+        this.mapperMetadata = mapperMetadata;
+    }
+
+    public void addMetadata(Metadata metadata) {
+        mapperMetadata.put(metadata.getFileId(), metadata);
+    }
+
+    public Metadata getSelectedFile() {
+        int index = tableau.getSelectedRow();
+        if(index==-1)
+            return null;
+        String key = tableau.getModel().getValueAt(index,0).toString();
+        return mapperMetadata.get(key);
+    }
+
+    public void removeMetadata(String key) {
+        mapperMetadata.remove(key);
+    }
+
+    public HashMap<String, Metadata> getMapperMetadata() {
+        return mapperMetadata;
     }
 }

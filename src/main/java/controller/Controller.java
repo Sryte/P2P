@@ -1,7 +1,8 @@
 package controller;
 
 import server.AbstractServer;
-import server.Metadata;
+import tools.Metadata;
+import tools.Peer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +13,7 @@ public class Controller extends AbstractController {
         super(serv);
     }
 
-    public void updatelistPeers(List<String> listPeers) {
+    public void updatelistPeers(List<Peer> listPeers) {
         serv.setListPeers(listPeers);
     }
 

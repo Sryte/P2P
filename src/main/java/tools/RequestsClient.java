@@ -1,5 +1,6 @@
 package tools;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -7,35 +8,26 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.InputStreamReader;
-import java.util.Base64;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class RequestsClient {
 
-    public void uploadFilesData(String url, String name, String fileId) throws Exception {
-        DefaultHttpClient httpClient = new DefaultHttpClient();
+    public void uploadFilesData(String url, String fileId) throws Exception {
+       DefaultHttpClient httpClient = new DefaultHttpClient();
 
-        FileReader fr = new FileReader(System.getProperty("user.dir")+"\\share\\" + name);
-        BufferedReader br = new BufferedReader(fr);
+        FileReading fr = new FileReading(fileId);
 
-        String reader;
-        String fileContent = "";
-
-        while ((reader = br.readLine()) != null) {
-            fileContent+=reader;
-        }
-        //System.out.println(fileContent);
-        fileContent = Base64.getEncoder().encodeToString(fileContent.getBytes());
-        System.out.println(fileContent);
 
         url = "http://"+url+"/files/"+fileId;
         HttpPost postFileData = new HttpPost(url);
 
-        String payload = "{\"content\":\""+fileContent+"\"}";
+        String payload = "{\"content\":\""+fr.getData()+"\"}";
         StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
 
         postFileData.setEntity(entity);
@@ -43,25 +35,16 @@ public class RequestsClient {
         HttpResponse response = httpClient.execute(postFileData);
 
         System.out.println(response.getStatusLine().getStatusCode());
-
-        br.close();
-        fr.close();
     }
 
-    public void uploadFilesMetadata(String url, String name) throws Exception {
+    public void uploadFilesMetadata(String url, Metadata metadata) throws Exception {
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
         url = "http://"+url+"/files";
         HttpPost postFileMetadata = new HttpPost(url);
 
-        String path = System.getProperty("user.dir")+"\\share\\" + name;
-        File file = new File(path);
-        long size = file.length();
-        String size2 = new String(String.valueOf(size));
 
-        long fileId = name.hashCode() * size2.hashCode();
-
-        String payload = "{\"fileId\":\""+fileId+"\",\"size\":\""+size+"\",\"name\":\""+name+"\"}";
+        String payload = "{\"fileId\":\""+metadata.getFileId()+"\",\"size\":"+metadata.getSize()+",\"name\":\""+metadata.getName()+"\"}";
         StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_JSON);
 
         postFileMetadata.setEntity(entity);
@@ -109,46 +92,41 @@ public class RequestsClient {
         br.close();
     }
 
-    public void getMetadata(String url) throws Exception {
-        DefaultHttpClient httpClient = new DefaultHttpClient();
+    public HashMap<String, Metadata> getMetadata(String url) {
 
-        url = "http://"+url+"/files";
-        HttpGet getMeta = new HttpGet(url);
 
-        HttpResponse response = httpClient.execute(getMeta);
+        RestTemplate restTemplate = new RestTemplate();
+        HashMap<String, Metadata> metadata = new HashMap<>();
+        String result = restTemplate.getForObject("http://" +url + "/files", String.class);
 
-        BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
-
-        String output;
-        System.out.println("Output from Server .... \n");
-        while ((output = br.readLine()) != null) {
-            System.out.println(output);
+        try {
+            metadata = new ObjectMapper().readValue(result, new TypeReference<HashMap<String, Metadata>>(){});
+        } catch (IOException e){
+            e.printStackTrace();
+            return null;
         }
 
-        System.out.println(response.getStatusLine().getStatusCode());
+        System.out.println(metadata);
 
-        br.close();
+        return metadata;
     }
 
-    public void listPeers(String url) throws Exception {
-        DefaultHttpClient httpClient = new DefaultHttpClient();
+    public List<Peer> getListPeers(String url) {
+        RestTemplate restTemplate = new RestTemplate();
+        List<Peer> peers = new ArrayList<>();
+        String result = restTemplate.getForObject("http://" +url + "/peers", String.class);
 
-        url = "http://"+url+"/peers";
-        HttpGet getPeers = new HttpGet(url);
 
-        HttpResponse response = httpClient.execute(getPeers);
-
-        BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
-
-        String output;
-        System.out.println("Output from Server .... \n");
-        while ((output = br.readLine()) != null) {
-            System.out.println(output);
+        try {
+            peers = new ObjectMapper().readValue(result, new TypeReference<List<Peer>>(){});
+        } catch (IOException e){
+            e.printStackTrace();
+            return null;
         }
 
-        System.out.println(response.getStatusLine().getStatusCode());
+        System.out.println(peers.get(0).getUrl());
 
-        br.close();
+        return peers;
     }
 
     public void unregisterPeers(String url, String peerId) throws Exception {
